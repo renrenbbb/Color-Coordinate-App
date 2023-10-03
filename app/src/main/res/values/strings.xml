@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ｶﾗｰｺｰﾃﾞｨﾈｰﾄ</string>
+    <string name="search">検索</string>
+    <string name="target">ターゲット</string>
+    <string name="tops">トップス</string>
+    <string name="bottoms">ボトムス</string>
+    <string name="shoes">シューズ</string>
+    <string name="other_item">他アイテム</string>
+    <string name="other_item_color">他アイテムの色</string>
+    <string name="color_select">色選択</string>
+    <string name="color_select2">色を選択</string>
+    <string name="slash">／</string>
+    <string name="back">戻る</string>
+    <string name="color_sort">同系色でソート</string>
+    <string name="ss">春夏</string>app_name
+    <string name="aw">秋冬</string>
+    <string name="red">R</string>
+    <string name="green">G</string>
+    <string name="blue">B</string>
+    <string name="ok">OK</string>
+    <string name="explanation_color">スライドして次の色を表示</string>
+    <string name="explanation_sidebar">サイドバーを開いて色を検索</string>
+    <string name="error_selectedcolor">色が未選択のアイテムがあります</string>
+    <string name="loading">loading...</string>
+</resources>

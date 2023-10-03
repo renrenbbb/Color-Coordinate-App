@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="textthemecolor">#505050</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="blue">#0000FF</color>
+    <color name="black">#000000</color>
+    <color name="smokeblue">#4682DC</color>
+    <color name="lightgray">#E6E6E6</color>
+    <color name="spcontrolthemecolor">#DC1446</color>
+</resources>
