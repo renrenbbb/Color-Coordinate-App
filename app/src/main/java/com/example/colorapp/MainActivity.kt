@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() ,
     //region 画面項目
     var textViewMessage : TextView? = null
     var buttonSearch : Button? = null
+    var buttonClose : Button? = null
     var radioButtonTargetTops  : RadioButton ? = null
     var radioButtonTargetBottoms :RadioButton ? = null
     var radioButtonTargetShoes :RadioButton ? = null
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() ,
     private fun setControl() {
         textViewMessage  =  findViewById<TextView>(R.id.textViewMessage)
         buttonSearch  =  findViewById<Button>(R.id.buttonSearch)
+        buttonClose  =  findViewById<Button>(R.id.buttonClose)
         radioButtonTargetTops =  findViewById<RadioButton>(R.id.radioButtonTargetTops)
         radioButtonTargetBottoms  =  findViewById<RadioButton>(R.id.radioButtonTargetBottoms)
         radioButtonTargetShoes=  findViewById<RadioButton>(R.id.radioButtonTargetShoes)
@@ -75,6 +77,7 @@ class MainActivity : AppCompatActivity() ,
         drawerLayoutMain = findViewById<DrawerLayout>(R.id.drawerLayoutMain)
 
         buttonSearch?.setOnClickListener(this)
+        buttonClose?.setOnClickListener(this)
         imageViewTopsColor?.setOnClickListener(this)
         imageViewBottomsColor?.setOnClickListener(this)
         imageViewShoesColor?.setOnClickListener(this)
@@ -92,6 +95,10 @@ class MainActivity : AppCompatActivity() ,
                 buttonSearch?.id -> {
                     //検索ボタン押下時
                     buttonSearchClick()
+                }
+                buttonClose?.id -> {
+                    //閉じるボタン押下時
+                    buttonCloseClick()
                 }
                 imageViewTopsColor?.id ,imageViewBottomsColor?.id,imageViewShoesColor?.id -> {
                     //カラーピッカーダイアログ表示
@@ -113,6 +120,14 @@ class MainActivity : AppCompatActivity() ,
 
         //ドロワーを閉じる
         if(result)drawerLayoutMain?.closeDrawer(Gravity.RIGHT)
+    }
+
+    /**
+     * 閉じるボタン押下時
+     */
+    private fun buttonCloseClick() : Unit {
+        //ドロワーを閉じる
+        drawerLayoutMain?.closeDrawer(Gravity.RIGHT)
     }
     //endregion
 

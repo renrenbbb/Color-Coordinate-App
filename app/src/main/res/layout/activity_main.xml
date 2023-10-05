@@ -40,16 +40,29 @@
                     android:orientation="vertical"
                     android:layout_weight="6">
                 <RelativeLayout
-                        android:id="@+id/relativeLayoutSeason"
+                        android:id="@+id/relativeLayoutHeader"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1">
+                    <Button
+                            android:id="@+id/buttonClose"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/custom_closebutton"/>
+                </RelativeLayout>
+                <RelativeLayout
+                        android:id="@+id/relativeLayoutSub2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5">
                     <TextView
                             android:id="@+id/textViewSs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
-                            android:layout_centerVertical="true"
+                            android:layout_marginTop="20dp"
                             android:text="@string/ss"
                             android:textColor="@color/textthemecolor"/>
                     <Switch
@@ -57,11 +70,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@+id/textViewSs"
-                            android:layout_alignBottom="@+id/textViewSs"
+                            android:layout_alignBaseline="@+id/textViewSs"
                             android:thumb="@drawable/custom_thumb"
                             android:track="@drawable/custom_track"
-                            android:layout_marginStart="5dp"
-                            android:switchMinWidth="60dp"/>
+                            android:layout_marginStart="5dp"/>
                     <TextView
                             android:id="@+id/textViewAw"
                             android:layout_width="wrap_content"
@@ -71,18 +83,13 @@
                             android:layout_marginStart="5dp"
                             android:text="@string/aw"
                             android:textColor="@color/textthemecolor"/>
-                </RelativeLayout>
-                <RelativeLayout
-                        android:id="@+id/relativeLayoutSub2"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="4">
                     <TextView
                             android:id="@+id/textViewTargetItem"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginStart="5dp"
+                            android:layout_below="@id/textViewSs"
+                            android:layout_alignStart="@+id/textViewSs"
                             android:text="@string/target"
                             android:textColor="@color/textthemecolor"/>
                     <RadioGroup
