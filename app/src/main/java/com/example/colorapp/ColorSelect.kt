@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 
 /**
- * 最適な色を検索するクラス
+ * 最適な色を検索するクラス（）
  */
 class ColorSelect {
     //region 定数・変数
