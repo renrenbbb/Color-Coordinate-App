@@ -64,7 +64,8 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="20dp"
                             android:text="@string/ss"
-                            android:textColor="@color/textthemecolor"/>
+                            android:textColor="@color/textthemecolor"
+                            android:visibility="invisible"/>
                     <Switch
                             android:id="@+id/switchSeason"
                             android:layout_width="wrap_content"
@@ -73,7 +74,8 @@
                             android:layout_alignBaseline="@+id/textViewSs"
                             android:thumb="@drawable/custom_thumb"
                             android:track="@drawable/custom_track"
-                            android:layout_marginStart="5dp"/>
+                            android:layout_marginStart="5dp"
+                            android:visibility="invisible"/>
                     <TextView
                             android:id="@+id/textViewAw"
                             android:layout_width="wrap_content"
@@ -82,7 +84,8 @@
                             android:layout_alignBottom="@+id/textViewSs"
                             android:layout_marginStart="5dp"
                             android:text="@string/aw"
-                            android:textColor="@color/textthemecolor"/>
+                            android:textColor="@color/textthemecolor"
+                            android:visibility="invisible"/>
                     <TextView
                             android:id="@+id/textViewTargetItem"
                             android:layout_width="wrap_content"
@@ -135,7 +138,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="vertical"
-                        android:layout_weight="5">
+                        android:layout_weight="6">
                     <LinearLayout
                             android:id="@+id/linearLayoutOtherItemTops"
                             android:layout_width="match_parent"
@@ -307,11 +310,6 @@
                             android:checked="true"
                     />
                 </LinearLayout>
-                <Space
-                        android:id="@+id/space1"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
                 <RelativeLayout
                         android:id="@+id/relativeLayoutMessage"
                         android:layout_width="match_parent"

@@ -2,26 +2,30 @@ package com.example.colorapp
 
 import android.os.Handler
 import android.content.Context
-import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-// リスト設定
+/**
+ * リスト設定
+ */
 class CardRowData{
     var backgroundColor : Int = 0
 }
 
+/**
+ * カードビューの設定(ホルダー)
+ */
 class CardViewHolder: RecyclerView.ViewHolder,
     View.OnClickListener{
 
+    //region 定数・変数
+    //非表示用Runnable
     private val hideControlRunnable = Runnable {
         linearLayoutSub1?.visibility = View.INVISIBLE
         linearLayoutSub2?.visibility = View.INVISIBLE
@@ -30,8 +34,8 @@ class CardViewHolder: RecyclerView.ViewHolder,
     }
 
     private val handler = Handler()
-
-    var context :Context
+    private var context :Context
+    //endregion
 
     //region 画面項目
     var linearLayoutSub1: LinearLayout? = null
@@ -44,6 +48,7 @@ class CardViewHolder: RecyclerView.ViewHolder,
     var imageViewHand :ImageView? = null
     //endregion
 
+    //region コンストラクタ
     constructor(itemView: View, context:Context,initFlg : Boolean):super(itemView){
         this.context = context
 
@@ -62,7 +67,7 @@ class CardViewHolder: RecyclerView.ViewHolder,
 
         if(initFlg)
         {
-            //初期画面の場合
+            //▼初期画面の場合
 
             textViewExplanation?.setText(R.string.explanation_sidebar)
             textViewExplanation?.setTextColor(ContextCompat.getColor(context,R.color.spcontrolthemecolor))
@@ -81,7 +86,7 @@ class CardViewHolder: RecyclerView.ViewHolder,
         }
         else
         {
-            //検索後の場合
+            //▼検索後の場合
 
             //用意したイメージ画像の関係で角度変更しておく
             imageViewHand?.rotation = 240f
@@ -94,10 +99,12 @@ class CardViewHolder: RecyclerView.ViewHolder,
             linearLayoutSub2?.visibility = View.INVISIBLE
         }
    }
+    //endregion
 
     //region 押下時イベント
     override fun onClick(v: View) {
         try {
+            //二度押しを禁止
             v.isEnabled = false
 
             when(v.id) {
@@ -136,16 +143,24 @@ class CardViewHolder: RecyclerView.ViewHolder,
     //endregion
 }
 
+/**
+ * カードビューのアダプター
+ */
 class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder>{
-    var list:MutableList<CardRowData>
-    var context: Context
-    var initFlg: Boolean
 
+    //region 定数・変数
+    private var list:MutableList<CardRowData>
+    private var context: Context
+    private var initFlg: Boolean
+    //endregion
+
+    //region コンストラクタ
     constructor(list:MutableList<CardRowData>, context: Context?,initFlg : Boolean){
         this.list = list
         this.context = context as Context
         this.initFlg = initFlg
     }
+    //endregion
 
     override fun onCreateViewHolder(vh: ViewGroup, p1: Int): CardViewHolder {
         val inflate:View = LayoutInflater.from(vh.context).inflate(R.layout.colorcardview, vh, false)
@@ -153,8 +168,11 @@ class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder>{
     }
 
     override fun onBindViewHolder(vh: CardViewHolder, p1: Int) {
+        //背景色を設定
         vh.imageViewSampleColor?.setBackgroundColor(list.get(p1).backgroundColor)
+        //現在の位置を表示
         vh.textViewCurrentPage?.text = (p1 + 1).toString()
+        //全ページ数を表示
         vh.textViewPageCnt?.text = getItemCount().toString()
     }
 

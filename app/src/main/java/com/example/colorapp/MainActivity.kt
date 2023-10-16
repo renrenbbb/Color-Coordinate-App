@@ -14,6 +14,9 @@ import androidx.fragment.app.FragmentManager
 import android.content.res.ColorStateList
 import android.view.WindowManager
 
+/**
+ * メインアクテビティ
+ */
 class MainActivity : AppCompatActivity() ,
     View.OnClickListener ,
     RadioGroup.OnCheckedChangeListener ,
@@ -21,21 +24,21 @@ class MainActivity : AppCompatActivity() ,
     CompoundButton.OnCheckedChangeListener{
 
     //region 画面項目
-    var textViewMessage : TextView? = null
-    var buttonSearch : Button? = null
-    var buttonClose : Button? = null
-    var radioButtonTargetTops  : RadioButton ? = null
-    var radioButtonTargetBottoms :RadioButton ? = null
-    var radioButtonTargetShoes :RadioButton ? = null
-    var radioGroupTargetItem : RadioGroup? = null
-    var imageViewTopsColor : ImageView? = null
-    var imageViewBottomsColor : ImageView? = null
-    var imageViewShoesColor : ImageView? = null
-    var checkBoxSort :CheckBox? = null
-    var viewPager2SampleColor: ViewPager2? = null
-    var switchSeason: Switch? = null
-    var navigationViewMain : NavigationView? = null
-    var drawerLayoutMain : DrawerLayout? = null
+    private  var textViewMessage : TextView? = null
+    private var buttonSearch : Button? = null
+    private var buttonClose : Button? = null
+    private var radioButtonTargetTops  : RadioButton ? = null
+    private var radioButtonTargetBottoms :RadioButton ? = null
+    private var radioButtonTargetShoes :RadioButton ? = null
+    private var radioGroupTargetItem : RadioGroup? = null
+    private var imageViewTopsColor : ImageView? = null
+    private var imageViewBottomsColor : ImageView? = null
+    private var imageViewShoesColor : ImageView? = null
+    private var checkBoxSort :CheckBox? = null
+    private var viewPager2SampleColor: ViewPager2? = null
+    private var switchSeason: Switch? = null
+    private var navigationViewMain : NavigationView? = null
+    private var drawerLayoutMain : DrawerLayout? = null
     //endregion
 
     //region 定数・変数
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity() ,
     //region ボタン押下時イベント
     override fun onClick(v: View) {
         try {
+            //二度押しを禁止
             v.isEnabled = false
 
             when(v.id) {
@@ -133,8 +137,6 @@ class MainActivity : AppCompatActivity() ,
 
     //region イベント
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-
-
     }
 
     override fun onCheckedChanged(v: CompoundButton?, isChecked: Boolean) {
@@ -144,7 +146,9 @@ class MainActivity : AppCompatActivity() ,
             when(v?.id) {
                 switchSeason?.id -> {
                     if (!isChecked) {
-                        //春夏の場合
+                        //▼春夏の場合
+
+                        //コントロールを赤色にする
                         buttonSearch?.setBackgroundColor(ContextCompat.getColor(this,R.color.colorAccent))
                         val colorStateList = ColorStateList.valueOf(ContextCompat.getColor(this,R.color.colorAccent))
                         checkBoxSort?.buttonTintList = colorStateList
@@ -153,14 +157,15 @@ class MainActivity : AppCompatActivity() ,
                         radioButtonTargetShoes?.buttonTintList = colorStateList
 
                     } else {
-                        //秋冬の場合
+                        //▼秋冬の場合
+
+                        //コントロールを青色にする
                         buttonSearch?.setBackgroundColor(ContextCompat.getColor(this,R.color.smokeblue))
                         val colorStateList = ColorStateList.valueOf(ContextCompat.getColor(this,R.color.smokeblue))
                         checkBoxSort?.buttonTintList = colorStateList
                         radioButtonTargetTops?.buttonTintList = colorStateList
                         radioButtonTargetBottoms?.buttonTintList = colorStateList
                         radioButtonTargetShoes?.buttonTintList = colorStateList
-
                     }
                 }
             }
@@ -175,14 +180,15 @@ class MainActivity : AppCompatActivity() ,
     /**
      * カルーセル設定
      */
-    fun setCarousel(initFlg :Boolean = false) : Boolean  {
-        val cardRowDatas : MutableList<CardRowData> = mutableListOf()
+    private fun setCarousel(initFlg :Boolean = false) : Boolean  {
+        val cardRowDataList : MutableList<CardRowData> = mutableListOf()
 
         if(initFlg)
         {
+            //▼初期状態
             val cardRowData = CardRowData()
             cardRowData.backgroundColor = getColor(R.color.white)
-            cardRowDatas.add(cardRowData)
+            cardRowDataList.add(cardRowData)
 
             viewPager2SampleColor?.offscreenPageLimit = 1
         }
@@ -208,7 +214,7 @@ class MainActivity : AppCompatActivity() ,
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if(imageViewBottomsColor?.drawable == null || imageViewShoesColor?.drawable == null)
                     {
-                        DisplayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
+                        displayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
                         return false
                     }
 
@@ -217,7 +223,6 @@ class MainActivity : AppCompatActivity() ,
                     otherRGBList.add(Utility.getRGBFromBitmap(bitmapBottoms,0,0))
                     val bitmapShoes = (imageViewShoesColor?.drawable as BitmapDrawable).bitmap
                     otherRGBList.add(Utility.getRGBFromBitmap(bitmapShoes,0,0))
-
                 }
                 radioButtonTargetBottoms?.id  -> {
                     item = Utility.item.BOTTOMS
@@ -225,7 +230,7 @@ class MainActivity : AppCompatActivity() ,
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if(imageViewTopsColor?.drawable == null || imageViewShoesColor?.drawable == null)
                     {
-                        DisplayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
+                        displayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
                         return false
                     }
 
@@ -239,7 +244,7 @@ class MainActivity : AppCompatActivity() ,
 
                     if(imageViewTopsColor?.drawable == null || imageViewBottomsColor?.drawable == null)
                     {
-                        DisplayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
+                        displayMessage(resources.getString(R.string.error_selectedcolor),Utility.msgLevel.ERROR)
                         return false
                     }
 
@@ -258,15 +263,17 @@ class MainActivity : AppCompatActivity() ,
                 val cardRowData = CardRowData()
 
                 cardRowData.backgroundColor = colorList[i]
-                cardRowDatas.add(cardRowData)
+                cardRowDataList.add(cardRowData)
             }
 
-            viewPager2SampleColor?.offscreenPageLimit =cardRowDatas.count() - 1
+            viewPager2SampleColor?.offscreenPageLimit =cardRowDataList.count() - 1
         }
 
-        viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDatas, this, initFlg)
+        //提案した色をカードビューに表示
+        viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDataList, this, initFlg)
 
-        DisplayMessage(null,Utility.msgLevel.INFORMATION)
+        //メッセージを初期化しておく
+        displayMessage(null,Utility.msgLevel.INFORMATION)
         return true
     }
 
@@ -297,10 +304,11 @@ class MainActivity : AppCompatActivity() ,
     /**
      * メッセージ表示
      */
-    private fun DisplayMessage(message: String? ,msgLevel:Utility.msgLevel) : Unit {
+    private fun displayMessage(message: String? ,msgLevel:Utility.msgLevel) : Unit {
         textViewMessage?.text = message
 
         var color :Int
+        //メッセージレベルを設定
         if(msgLevel == Utility.msgLevel.INFORMATION)
         {
             color = R.color.black

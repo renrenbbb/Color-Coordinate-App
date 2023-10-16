@@ -6,11 +6,17 @@ import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * スプラッシュ用アクテビティ
+ */
 class SplashActivity : AppCompatActivity()
 {
-    //画面を表示時間
+    //region 定数・変数
+    //表示時間
     private val splashTimeOut: Long = 3000
+    //endregion
 
+    //region ロード処理
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,11 +26,12 @@ class SplashActivity : AppCompatActivity()
         //レイアウトの設定
         setContentView(R.layout.activity_splash)
 
+        // スプラッシュ画面が表示された後にメインアクティビティに遷移する
         Handler().postDelayed({
-            // スプラッシュ画面が表示された後にメインアクティビティに遷移する
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
         }, splashTimeOut)
     }
+    //endregion
 }

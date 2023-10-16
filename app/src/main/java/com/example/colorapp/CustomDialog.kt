@@ -21,6 +21,9 @@ import android.os.Looper
 import androidx.core.app.ActivityCompat
 import android.view.*
 
+/**
+ * カラーピッカーダイアログ
+ */
 class CustomDialog: DialogFragment(),
     View.OnClickListener ,
     View.OnTouchListener,
@@ -49,9 +52,10 @@ class CustomDialog: DialogFragment(),
     private var longPressing = false
     private var isButtonCamera1Visible = true
     private val cameraBlinkHandler = Handler(Looper.getMainLooper())
-    private val cameraBlinkTime: Long = 500 // 点滅間隔（ミリ秒）
-
-    val sampleColorList : Array<String> =
+    //点滅間隔（ミリ秒）
+    private val cameraBlinkTime: Long = 500
+    //サンプルカラーリスト
+    private val sampleColorList : Array<String> =
         arrayOf(
             "#FFC0CB",
             "#FF69B4",
@@ -90,57 +94,57 @@ class CustomDialog: DialogFragment(),
     //endregion
 
     //region 画面項目
-    var textViewValueRed : TextView? = null
-    var textViewValueGreen : TextView? = null
-    var textViewValueBlue : TextView? = null
-    var seekBarRed : SeekBar? = null
-    var seekBarGreen : SeekBar? = null
-    var seekBarBlue : SeekBar? = null
-    var imageViewSelectedColor : ImageView? = null
-    var buttonDecided : Button? = null
-    var buttonCamera1 : Button? = null
-    var buttonCamera2 : Button? = null
-    var textureViewCamera : TextureView? = null
-    var buttonLeftRed : Button? = null
-    var buttonLeftGreen : Button? = null
-    var buttonLeftBlue : Button? = null
-    var buttonRightRed : Button? = null
-    var buttonRightGreen : Button? = null
-    var buttonRightBlue : Button? = null
+    private var textViewValueRed : TextView? = null
+    private var textViewValueGreen : TextView? = null
+    private var textViewValueBlue : TextView? = null
+    private var seekBarRed : SeekBar? = null
+    private var seekBarGreen : SeekBar? = null
+    private var seekBarBlue : SeekBar? = null
+    private var imageViewSelectedColor : ImageView? = null
+    private var buttonDecided : Button? = null
+    private var buttonCamera1 : Button? = null
+    private var buttonCamera2 : Button? = null
+    private var textureViewCamera : TextureView? = null
+    private var buttonLeftRed : Button? = null
+    private var buttonLeftGreen : Button? = null
+    private var buttonLeftBlue : Button? = null
+    private var buttonRightRed : Button? = null
+    private var buttonRightGreen : Button? = null
+    private var buttonRightBlue : Button? = null
 
-    var imageViewPalette0 :ImageView? = null
-    var imageViewPalette1 :ImageView? = null
-    var imageViewPalette2 :ImageView? = null
-    var imageViewPalette3 :ImageView? = null
-    var imageViewPalette4 :ImageView? = null
-    var imageViewPalette5 :ImageView? = null
-    var imageViewPalette6 :ImageView? = null
-    var imageViewPalette7 :ImageView? = null
-    var imageViewPalette8 :ImageView? = null
-    var imageViewPalette9 :ImageView? = null
-    var imageViewPalette10 :ImageView? = null
-    var imageViewPalette11 :ImageView? = null
-    var imageViewPalette12 :ImageView? = null
-    var imageViewPalette13 :ImageView? = null
-    var imageViewPalette14 :ImageView? = null
-    var imageViewPalette15 :ImageView? = null
-    var imageViewPalette16 :ImageView? = null
-    var imageViewPalette17 :ImageView? = null
-    var imageViewPalette18 :ImageView? = null
-    var imageViewPalette19 :ImageView? = null
-    var imageViewPalette20 :ImageView? = null
-    var imageViewPalette21 :ImageView? = null
-    var imageViewPalette22 :ImageView? = null
-    var imageViewPalette23 :ImageView? = null
-    var imageViewPalette24 :ImageView? = null
-    var imageViewPalette25 :ImageView? = null
-    var imageViewPalette26 :ImageView? = null
-    var imageViewPalette27 :ImageView? = null
-    var imageViewPalette28 :ImageView? = null
-    var imageViewPalette29 :ImageView? = null
-    var imageViewPalette30 :ImageView? = null
-    var imageViewPalette31 :ImageView? = null
-    var imageViewPalette32 :ImageView? = null
+    private var imageViewPalette0 :ImageView? = null
+    private var imageViewPalette1 :ImageView? = null
+    private var imageViewPalette2 :ImageView? = null
+    private var imageViewPalette3 :ImageView? = null
+    private var imageViewPalette4 :ImageView? = null
+    private var imageViewPalette5 :ImageView? = null
+    private var imageViewPalette6 :ImageView? = null
+    private var imageViewPalette7 :ImageView? = null
+    private var imageViewPalette8 :ImageView? = null
+    private var imageViewPalette9 :ImageView? = null
+    private var imageViewPalette10 :ImageView? = null
+    private var imageViewPalette11 :ImageView? = null
+    private var imageViewPalette12 :ImageView? = null
+    private var imageViewPalette13 :ImageView? = null
+    private var imageViewPalette14 :ImageView? = null
+    private var imageViewPalette15 :ImageView? = null
+    private var imageViewPalette16 :ImageView? = null
+    private var imageViewPalette17 :ImageView? = null
+    private var imageViewPalette18 :ImageView? = null
+    private var imageViewPalette19 :ImageView? = null
+    private var imageViewPalette20 :ImageView? = null
+    private var imageViewPalette21 :ImageView? = null
+    private var imageViewPalette22 :ImageView? = null
+    private var imageViewPalette23 :ImageView? = null
+    private var imageViewPalette24 :ImageView? = null
+    private var imageViewPalette25 :ImageView? = null
+    private var imageViewPalette26 :ImageView? = null
+    private var imageViewPalette27 :ImageView? = null
+    private var imageViewPalette28 :ImageView? = null
+    private var imageViewPalette29 :ImageView? = null
+    private var imageViewPalette30 :ImageView? = null
+    private var imageViewPalette31 :ImageView? = null
+    private var imageViewPalette32 :ImageView? = null
     //endregion
 
     fun setDialogResultListener(listener: DialogResultListener) {
@@ -156,6 +160,7 @@ class CustomDialog: DialogFragment(),
         initBlueColor = rGB.component3()
     }
 
+    //region 季節設定
     fun setSeason(season: Utility.season) {
         this.season = season
     }
@@ -272,6 +277,7 @@ class CustomDialog: DialogFragment(),
         buttonRightRed?.setOnClickListener(this)
         buttonRightGreen?.setOnClickListener(this)
         buttonRightBlue ?.setOnClickListener(this)
+        //長押しのためタッチリスナーも設定
         buttonLeftRed?.setOnTouchListener(this)
         buttonLeftGreen?.setOnTouchListener(this)
         buttonLeftBlue?.setOnTouchListener(this)
@@ -332,6 +338,7 @@ class CustomDialog: DialogFragment(),
     //region ボタン押下時イベント
     override fun onClick(v: View) {
         try {
+            //二度押しを禁止
             v.isEnabled = false
 
             when(v.id) {
@@ -341,7 +348,7 @@ class CustomDialog: DialogFragment(),
                 }
                 buttonCamera1?.id,
                 buttonCamera2?.id-> {
-                    //OKボタン押下時
+                    //カメラボタン押下時
                     buttonCameraClick()
                 }
                 buttonLeftRed?.id,
@@ -407,7 +414,7 @@ class CustomDialog: DialogFragment(),
         val bitmap = (imageViewSelectedColor?.drawable as BitmapDrawable).bitmap
 
         val rgb :Triple<Int, Int, Int> = Utility.getRGBFromBitmap(bitmap,0,0)
-
+        //メインアクテビティへ選択結果を返却
         dialogResultListener?.onDialogResult(targetImageView,rgb)
 
         dismiss()
@@ -417,7 +424,7 @@ class CustomDialog: DialogFragment(),
      * カメラボタン押下時
      */
     private fun buttonCameraClick() : Unit {
-
+        //カメラのテクスチャビューを表示(裏で常に起動している)
         textureViewCamera?.visibility =  View.VISIBLE
     }
 
@@ -425,6 +432,7 @@ class CustomDialog: DialogFragment(),
      * 左ボタン押下時
      */
     private fun buttonLeftClick(id : Int) : Unit {
+        //該当のシークバーを-1する
         when (id) {
             buttonLeftRed?.id -> {
                 (seekBarRed as SeekBar).progress -= 1
@@ -448,6 +456,7 @@ class CustomDialog: DialogFragment(),
      * 右ボタン押下時
      */
     private fun buttonRightClick(id : Int) : Unit {
+        //該当のシークバーを+1する
         when (id) {
             buttonRightRed?.id -> {
                 (seekBarRed as SeekBar).progress += 1
@@ -470,7 +479,7 @@ class CustomDialog: DialogFragment(),
     /**
      * カラーパレット押下時
      */
-    fun colorPaletteClick(imageView: ImageView?) {
+    private fun colorPaletteClick(imageView: ImageView?) {
         //ImageViewからRGBを取得
         val rGB = Utility.getRGBFromImageView((imageView))
 
@@ -538,7 +547,7 @@ class CustomDialog: DialogFragment(),
                 seekBarBlue?.progress = blueColor
             }
         }
-
+        //カメラのテクスチャビューを非表示する
         textureViewCamera?.visibility =  View.INVISIBLE
     }
     //endregion
@@ -684,14 +693,12 @@ class CustomDialog: DialogFragment(),
      * つまみがタッチされた時に呼ばれる
      */
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
     }
 
     /**
      * つまみが離された時に呼ばれる
      */
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
     }
     //endregion
 
@@ -749,6 +756,7 @@ class CustomDialog: DialogFragment(),
         val palette31 = Utility.getColorCodeToRGB(sampleColorList[31])
         val palette32 = Utility.getColorCodeToRGB(sampleColorList[32])
 
+        //カラーパレットへサンプルカラーを設定
         imageViewPalette0?.setImageBitmap(Utility.createBitmap(imageViewPalette0, palette0.component1(),palette0.component2(),  palette0.component3()))
         imageViewPalette1?.setImageBitmap(Utility.createBitmap(imageViewPalette1, palette1.component1(),palette1.component2(),  palette1.component3()))
         imageViewPalette2?.setImageBitmap(Utility.createBitmap(imageViewPalette2, palette2.component1(),palette2.component2(),  palette2.component3()))
@@ -827,7 +835,8 @@ class CustomDialog: DialogFragment(),
 
     private fun setupCamera() {
         val cameraManager = parentContext?.getSystemService(CAMERA_SERVICE) as CameraManager
-        val cameraId = cameraManager.cameraIdList[0] // カメラのIDを選択
+        //カメラのIDを選択
+        val cameraId = cameraManager.cameraIdList[0]
 
         val characteristics = cameraManager.getCameraCharacteristics(cameraId)
         val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
@@ -838,7 +847,8 @@ class CustomDialog: DialogFragment(),
 
     private fun openCamera() {
         val cameraManager = parentContext?.getSystemService(CAMERA_SERVICE) as CameraManager
-        val cameraId = cameraManager.cameraIdList[0] // カメラのIDを選択
+        //カメラのIDを選択
+        val cameraId = cameraManager.cameraIdList[0]
 
         if (ActivityCompat.checkSelfPermission(parentContext as Context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {

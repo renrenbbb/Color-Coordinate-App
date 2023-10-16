@@ -5,45 +5,41 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 
 /**
- * 最適な色を検索するクラス（）
+ * 最適な色を抽出するクラス
  */
 class ColorSelect {
     //region 定数・変数
     /**
-     * 閾値
-     */
-    val threshold : Int = 1
-    /**
      * 閾値(黒色)
      */
-    val blackThreshold : Int = 70
+    private val blackThreshold : Int = 70
     /**
      * 閾値(白色)
      */
-    val whiteThreshold : Int = 235
+    private val whiteThreshold : Int = 235
     /**
      * 閾値(モノトーン)
      */
-    val monotoneThreshold : Int = 10
+    private val monotoneThreshold : Int = 10
     /**
      * 閾値(トーン)：255, 255,255の合計の半分の値
      */
-    val toneThreshold: Int = 383
+    private val toneThreshold: Int = 383
     /**
      * 提案する色の最大数
      */
-    val suggestMaxCount : Int = 30
+    private val suggestMaxCount : Int = 30
     /**
      * 提案する色の最小数
      */
-    val suggestMinCount : Int = 10
+    private val suggestMinCount : Int = 10
     //endregion
 
     //region カラーリスト
     /**
      * 赤系
      */
-    val redColor : Array<String> =
+    private val redColor : Array<String> =
         arrayOf(
             "#FF0000",
             "#800000",
@@ -60,7 +56,7 @@ class ColorSelect {
     /**
      * 緑系
      */
-    val greenColor : Array<String> =
+    private val greenColor : Array<String> =
         arrayOf(
             "#32CD32",
             "#006400",
@@ -82,7 +78,7 @@ class ColorSelect {
     /**
      * 青系
      */
-    val blueColor : Array<String> =
+    private val blueColor : Array<String> =
         arrayOf(
             "#708090",
             "#165E83",
@@ -117,7 +113,7 @@ class ColorSelect {
     /**
      * ピンク系
      */
-    val pinkColor : Array<String> =
+    private val pinkColor : Array<String> =
         arrayOf(
             "#FF69B4",
             "#FFB6C1",
@@ -131,7 +127,7 @@ class ColorSelect {
     /**
      * 黄色系
      */
-    val yellowColor : Array<String> =
+    private val yellowColor : Array<String> =
         arrayOf(
             "#F8B400",
             "#FFD700",
@@ -144,7 +140,7 @@ class ColorSelect {
     /**
      * オレンジ系
      */
-    val orangeColor : Array<String> =
+    private val orangeColor : Array<String> =
         arrayOf(
             "#FFA500",
             "#FFA564",
@@ -156,7 +152,7 @@ class ColorSelect {
     /**
      * 紫系
      */
-    val purpleColor : Array<String> =
+    private val purpleColor : Array<String> =
         arrayOf(
             "#BC8F8F",
             "#B3424A",
@@ -178,7 +174,7 @@ class ColorSelect {
     /**
      * ベージュ系
      */
-    val beigeColor : Array<String> =
+    private val beigeColor : Array<String> =
         arrayOf(
             "#DEB887",
             "#F5DEB3",
@@ -190,7 +186,7 @@ class ColorSelect {
     /**
      * ブラウン系
      */
-    val brownColor : Array<String> =
+    private val brownColor : Array<String> =
         arrayOf(
             "#CD853F",
             "#8B4513",
@@ -200,7 +196,7 @@ class ColorSelect {
     /**
      * 白系
      */
-    val whiteColor : Array<String> =
+    private val whiteColor : Array<String> =
         arrayOf(
             "#FFFFFF",
             "#FFFFDC",
@@ -210,7 +206,7 @@ class ColorSelect {
     /**
      * 黒系
      */
-    val blackColor : Array<String> =
+    private val blackColor : Array<String> =
         arrayOf(
             "#000000",
             "#323232",
@@ -222,7 +218,7 @@ class ColorSelect {
     /**
      * グレー系
      */
-    val grayColor : Array<String> =
+    private val grayColor : Array<String> =
         arrayOf(
             "#464646",
             "#E6E6E6",
@@ -237,7 +233,7 @@ class ColorSelect {
     /**
      * 色み(色相)
      */
-    enum class hue{
+    private enum class hue{
         //赤
         RED,
         //緑
@@ -582,7 +578,7 @@ class ColorSelect {
     /**
      * 2つの色の距離を取得
      */
-    fun getColorDistance(color1: Triple<Int, Int, Int>, color2: Triple<Int, Int, Int>): Double {
+    private fun getColorDistance(color1: Triple<Int, Int, Int>, color2: Triple<Int, Int, Int>): Double {
         val redDiff = color1.component1() - color2.component1()
         val greenDiff = color1.component2() - color2.component2()
         val blueDiff = color1.component3() - color2.component3()
