@@ -1,7 +1,7 @@
 package com.example.colorapp
 
-import android.os.Handler
 import android.content.Context
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * リスト設定
  */
-class CardRowData{
-    var backgroundColor : Int = 0
+class CardRowData {
+    var backgroundColor: Int = 0
 }
 
 /**
  * カードビューの設定(ホルダー)
  */
-class CardViewHolder: RecyclerView.ViewHolder,
-    View.OnClickListener{
+class CardViewHolder : RecyclerView.ViewHolder,
+    View.OnClickListener {
 
     //region 定数・変数
     //非表示用Runnable
@@ -34,22 +34,22 @@ class CardViewHolder: RecyclerView.ViewHolder,
     }
 
     private val handler = Handler()
-    private var context :Context
+    private var context: Context
     //endregion
 
     //region 画面項目
     var linearLayoutSub1: LinearLayout? = null
     var linearLayoutSub2: LinearLayout? = null
     var imageViewSampleColor: ImageView? = null
-    var textViewCurrentPage :TextView? = null
-    var textViewSlash :TextView? = null
-    var textViewPageCnt :TextView? = null
-    var textViewExplanation :TextView? = null
-    var imageViewHand :ImageView? = null
+    var textViewCurrentPage: TextView? = null
+    var textViewSlash: TextView? = null
+    var textViewPageCnt: TextView? = null
+    var textViewExplanation: TextView? = null
+    var imageViewHand: ImageView? = null
     //endregion
 
     //region コンストラクタ
-    constructor(itemView: View, context:Context,initFlg : Boolean):super(itemView){
+    constructor(itemView: View, context: Context, initFlg: Boolean) : super(itemView) {
         this.context = context
 
         this.linearLayoutSub1 = itemView.findViewById(R.id.linearLayoutSub1)
@@ -62,15 +62,19 @@ class CardViewHolder: RecyclerView.ViewHolder,
         this.imageViewHand = itemView.findViewById(R.id.imageViewHand)
 
         linearLayoutSub1?.visibility = View.INVISIBLE
-        linearLayoutSub1?.setBackgroundColor(ContextCompat.getColor(context,R.color.black))
+        linearLayoutSub1?.setBackgroundColor(ContextCompat.getColor(context, R.color.black))
         linearLayoutSub1?.alpha = 0.25f
 
-        if(initFlg)
-        {
+        if (initFlg) {
             //▼初期画面の場合
 
             textViewExplanation?.setText(R.string.explanation_sidebar)
-            textViewExplanation?.setTextColor(ContextCompat.getColor(context,R.color.spcontrolthemecolor))
+            textViewExplanation?.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.spcontrolthemecolor
+                )
+            )
 
             //用意したイメージ画像の関係で角度変更しておく
             imageViewHand?.rotation = 315f
@@ -83,9 +87,7 @@ class CardViewHolder: RecyclerView.ViewHolder,
 
             //アニメーションを設定
             imageViewHand?.startAnimation(Utility.createAnimation(300f))
-        }
-        else
-        {
+        } else {
             //▼検索後の場合
 
             //用意したイメージ画像の関係で角度変更しておく
@@ -94,11 +96,11 @@ class CardViewHolder: RecyclerView.ViewHolder,
             imageViewSampleColor?.setOnClickListener(this)
 
             textViewExplanation?.setText(R.string.explanation_color)
-            textViewExplanation?.setTextColor(ContextCompat.getColor(context,R.color.white))
+            textViewExplanation?.setTextColor(ContextCompat.getColor(context, R.color.white))
 
             linearLayoutSub2?.visibility = View.INVISIBLE
         }
-   }
+    }
     //endregion
 
     //region 押下時イベント
@@ -107,14 +109,13 @@ class CardViewHolder: RecyclerView.ViewHolder,
             //二度押しを禁止
             v.isEnabled = false
 
-            when(v.id) {
+            when (v.id) {
                 imageViewSampleColor?.id -> {
                     //画面押下時
                     relativeLayoutSubClick()
                 }
             }
-        }
-        finally {
+        } finally {
             v.isEnabled = true
         }
     }
@@ -122,14 +123,12 @@ class CardViewHolder: RecyclerView.ViewHolder,
     /**
      * 画面押下時
      */
-    private fun relativeLayoutSubClick() : Unit {
+    private fun relativeLayoutSubClick(): Unit {
         //画面押下時は説明を表示する
         if (linearLayoutSub1?.visibility == View.VISIBLE) {
             linearLayoutSub1?.visibility = View.INVISIBLE
             linearLayoutSub2?.visibility = View.INVISIBLE
-        }
-        else
-        {
+        } else {
             linearLayoutSub1?.visibility = View.VISIBLE
             linearLayoutSub2?.visibility = View.VISIBLE
 
@@ -146,16 +145,16 @@ class CardViewHolder: RecyclerView.ViewHolder,
 /**
  * カードビューのアダプター
  */
-class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder>{
+class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder> {
 
     //region 定数・変数
-    private var list:MutableList<CardRowData>
+    private var list: MutableList<CardRowData>
     private var context: Context
     private var initFlg: Boolean
     //endregion
 
     //region コンストラクタ
-    constructor(list:MutableList<CardRowData>, context: Context?,initFlg : Boolean){
+    constructor(list: MutableList<CardRowData>, context: Context?, initFlg: Boolean) {
         this.list = list
         this.context = context as Context
         this.initFlg = initFlg
@@ -163,8 +162,9 @@ class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder>{
     //endregion
 
     override fun onCreateViewHolder(vh: ViewGroup, p1: Int): CardViewHolder {
-        val inflate:View = LayoutInflater.from(vh.context).inflate(R.layout.colorcardview, vh, false)
-        return CardViewHolder(inflate,context,initFlg)
+        val inflate: View =
+            LayoutInflater.from(vh.context).inflate(R.layout.colorcardview, vh, false)
+        return CardViewHolder(inflate, context, initFlg)
     }
 
     override fun onBindViewHolder(vh: CardViewHolder, p1: Int) {

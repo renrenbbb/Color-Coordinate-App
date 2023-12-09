@@ -1,50 +1,61 @@
 package com.example.colorapp
 
+import android.Manifest
 import android.app.Dialog
+import android.content.Context
 import android.content.Context.CAMERA_SERVICE
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.SurfaceTexture
 import android.graphics.drawable.BitmapDrawable
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CameraMetadata
+import android.hardware.camera2.CaptureRequest
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.MotionEvent
+import android.view.Surface
+import android.view.TextureView
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.camera2.*
-import android.os.Handler
-import android.os.Looper
-import androidx.core.app.ActivityCompat
-import android.view.*
 
 /**
  * カラーピッカーダイアログ
  */
-class CustomDialog: DialogFragment(),
-    View.OnClickListener ,
+class CustomDialog : DialogFragment(),
+    View.OnClickListener,
     View.OnTouchListener,
     SeekBar.OnSeekBarChangeListener,
-    ViewTreeObserver.OnGlobalLayoutListener ,
+    ViewTreeObserver.OnGlobalLayoutListener,
     TextureView.SurfaceTextureListener {
 
     //region インターフェース
     interface DialogResultListener {
-        fun onDialogResult(targetImageView:  ImageView?, rgb: Triple<Int, Int, Int>)
+        fun onDialogResult(targetImageView: ImageView?, rgb: Triple<Int, Int, Int>)
     }
     //endregion
 
     //region 定数・変数
-    private var dialogResultListener : DialogResultListener? = null
-    private var parentContext : Context? = null
-    private var targetImageView : ImageView? = null
-    private var initRedColor : Int = 0
-    private var initGreenColor : Int = 0
-    private var initBlueColor : Int = 0
-    private var season : Utility.season = Utility.season.SS
+    private var dialogResultListener: DialogResultListener? = null
+    private var parentContext: Context? = null
+    private var targetImageView: ImageView? = null
+    private var initRedColor: Int = 0
+    private var initGreenColor: Int = 0
+    private var initBlueColor: Int = 0
+    private var season: Utility.season = Utility.season.SS
     private var camera: CameraDevice? = null
     private lateinit var cameraCaptureSession: CameraCaptureSession
     private lateinit var captureRequestBuilder: CaptureRequest.Builder
@@ -52,10 +63,12 @@ class CustomDialog: DialogFragment(),
     private var longPressing = false
     private var isButtonCamera1Visible = true
     private val cameraBlinkHandler = Handler(Looper.getMainLooper())
+
     //点滅間隔（ミリ秒）
     private val cameraBlinkTime: Long = 500
+
     //サンプルカラーリスト
-    private val sampleColorList : Array<String> =
+    private val sampleColorList: Array<String> =
         arrayOf(
             "#FFC0CB",
             "#FF69B4",
@@ -94,57 +107,57 @@ class CustomDialog: DialogFragment(),
     //endregion
 
     //region 画面項目
-    private var textViewValueRed : TextView? = null
-    private var textViewValueGreen : TextView? = null
-    private var textViewValueBlue : TextView? = null
-    private var seekBarRed : SeekBar? = null
-    private var seekBarGreen : SeekBar? = null
-    private var seekBarBlue : SeekBar? = null
-    private var imageViewSelectedColor : ImageView? = null
-    private var buttonDecided : Button? = null
-    private var buttonCamera1 : Button? = null
-    private var buttonCamera2 : Button? = null
-    private var textureViewCamera : TextureView? = null
-    private var buttonLeftRed : Button? = null
-    private var buttonLeftGreen : Button? = null
-    private var buttonLeftBlue : Button? = null
-    private var buttonRightRed : Button? = null
-    private var buttonRightGreen : Button? = null
-    private var buttonRightBlue : Button? = null
+    private var textViewValueRed: TextView? = null
+    private var textViewValueGreen: TextView? = null
+    private var textViewValueBlue: TextView? = null
+    private var seekBarRed: SeekBar? = null
+    private var seekBarGreen: SeekBar? = null
+    private var seekBarBlue: SeekBar? = null
+    private var imageViewSelectedColor: ImageView? = null
+    private var buttonDecided: Button? = null
+    private var buttonCamera1: Button? = null
+    private var buttonCamera2: Button? = null
+    private var textureViewCamera: TextureView? = null
+    private var buttonLeftRed: Button? = null
+    private var buttonLeftGreen: Button? = null
+    private var buttonLeftBlue: Button? = null
+    private var buttonRightRed: Button? = null
+    private var buttonRightGreen: Button? = null
+    private var buttonRightBlue: Button? = null
 
-    private var imageViewPalette0 :ImageView? = null
-    private var imageViewPalette1 :ImageView? = null
-    private var imageViewPalette2 :ImageView? = null
-    private var imageViewPalette3 :ImageView? = null
-    private var imageViewPalette4 :ImageView? = null
-    private var imageViewPalette5 :ImageView? = null
-    private var imageViewPalette6 :ImageView? = null
-    private var imageViewPalette7 :ImageView? = null
-    private var imageViewPalette8 :ImageView? = null
-    private var imageViewPalette9 :ImageView? = null
-    private var imageViewPalette10 :ImageView? = null
-    private var imageViewPalette11 :ImageView? = null
-    private var imageViewPalette12 :ImageView? = null
-    private var imageViewPalette13 :ImageView? = null
-    private var imageViewPalette14 :ImageView? = null
-    private var imageViewPalette15 :ImageView? = null
-    private var imageViewPalette16 :ImageView? = null
-    private var imageViewPalette17 :ImageView? = null
-    private var imageViewPalette18 :ImageView? = null
-    private var imageViewPalette19 :ImageView? = null
-    private var imageViewPalette20 :ImageView? = null
-    private var imageViewPalette21 :ImageView? = null
-    private var imageViewPalette22 :ImageView? = null
-    private var imageViewPalette23 :ImageView? = null
-    private var imageViewPalette24 :ImageView? = null
-    private var imageViewPalette25 :ImageView? = null
-    private var imageViewPalette26 :ImageView? = null
-    private var imageViewPalette27 :ImageView? = null
-    private var imageViewPalette28 :ImageView? = null
-    private var imageViewPalette29 :ImageView? = null
-    private var imageViewPalette30 :ImageView? = null
-    private var imageViewPalette31 :ImageView? = null
-    private var imageViewPalette32 :ImageView? = null
+    private var imageViewPalette0: ImageView? = null
+    private var imageViewPalette1: ImageView? = null
+    private var imageViewPalette2: ImageView? = null
+    private var imageViewPalette3: ImageView? = null
+    private var imageViewPalette4: ImageView? = null
+    private var imageViewPalette5: ImageView? = null
+    private var imageViewPalette6: ImageView? = null
+    private var imageViewPalette7: ImageView? = null
+    private var imageViewPalette8: ImageView? = null
+    private var imageViewPalette9: ImageView? = null
+    private var imageViewPalette10: ImageView? = null
+    private var imageViewPalette11: ImageView? = null
+    private var imageViewPalette12: ImageView? = null
+    private var imageViewPalette13: ImageView? = null
+    private var imageViewPalette14: ImageView? = null
+    private var imageViewPalette15: ImageView? = null
+    private var imageViewPalette16: ImageView? = null
+    private var imageViewPalette17: ImageView? = null
+    private var imageViewPalette18: ImageView? = null
+    private var imageViewPalette19: ImageView? = null
+    private var imageViewPalette20: ImageView? = null
+    private var imageViewPalette21: ImageView? = null
+    private var imageViewPalette22: ImageView? = null
+    private var imageViewPalette23: ImageView? = null
+    private var imageViewPalette24: ImageView? = null
+    private var imageViewPalette25: ImageView? = null
+    private var imageViewPalette26: ImageView? = null
+    private var imageViewPalette27: ImageView? = null
+    private var imageViewPalette28: ImageView? = null
+    private var imageViewPalette29: ImageView? = null
+    private var imageViewPalette30: ImageView? = null
+    private var imageViewPalette31: ImageView? = null
+    private var imageViewPalette32: ImageView? = null
     //endregion
 
     fun setDialogResultListener(listener: DialogResultListener) {
@@ -171,6 +184,7 @@ class CustomDialog: DialogFragment(),
         // 親Activityのコンテキストを取得
         parentContext = context
     }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val dialog = Dialog(requireContext())
@@ -191,7 +205,7 @@ class CustomDialog: DialogFragment(),
      */
     private fun setControl(dialog: Dialog) {
         //各コントロールを設定
-        textViewValueRed  =  dialog.findViewById<TextView>(R.id.textViewValueRed)
+        textViewValueRed = dialog.findViewById<TextView>(R.id.textViewValueRed)
         textViewValueGreen = dialog.findViewById<TextView>(R.id.textViewValueGreen)
         textViewValueBlue = dialog.findViewById<TextView>(R.id.textViewValueBlue)
         seekBarRed = dialog.findViewById<SeekBar>(R.id.seekBarRed)
@@ -202,9 +216,9 @@ class CustomDialog: DialogFragment(),
         buttonCamera1 = dialog.findViewById<Button>(R.id.buttonCamera1)
         buttonCamera2 = dialog.findViewById<Button>(R.id.buttonCamera2)
         textureViewCamera = dialog.findViewById<TextureView>(R.id.textureViewCamera)
-        buttonLeftRed  = dialog.findViewById<Button>(R.id.buttonLeftRed)
+        buttonLeftRed = dialog.findViewById<Button>(R.id.buttonLeftRed)
         buttonLeftGreen = dialog.findViewById<Button>(R.id.buttonLeftGreen)
-        buttonLeftBlue= dialog.findViewById<Button>(R.id.buttonLeftBlue)
+        buttonLeftBlue = dialog.findViewById<Button>(R.id.buttonLeftBlue)
         buttonRightRed = dialog.findViewById<Button>(R.id.buttonRightRed)
         buttonRightGreen = dialog.findViewById<Button>(R.id.buttonRightGreen)
         buttonRightBlue = dialog.findViewById<Button>(R.id.buttonRightBlue)
@@ -243,19 +257,34 @@ class CustomDialog: DialogFragment(),
         imageViewPalette31 = dialog.findViewById<ImageView>(R.id.imageViewPalette31)
         imageViewPalette32 = dialog.findViewById<ImageView>(R.id.imageViewPalette32)
 
-        if(season == Utility.season.SS)
-        {
-            buttonDecided?.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorAccent))
-            val colorStateList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(),R.color.colorAccent))
+        if (season == Utility.season.SS) {
+            buttonDecided?.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorAccent
+                )
+            )
+            val colorStateList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorAccent
+                )
+            )
             seekBarRed?.thumbTintList = colorStateList
             seekBarGreen?.thumbTintList = colorStateList
             seekBarBlue?.thumbTintList = colorStateList
             seekBarRed?.progressTintList = colorStateList
             seekBarGreen?.progressTintList = colorStateList
             seekBarBlue?.progressTintList = colorStateList
-        }else{
-            buttonDecided?.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.smokeblue))
-            val colorStateList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(),R.color.smokeblue))
+        } else {
+            buttonDecided?.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.smokeblue
+                )
+            )
+            val colorStateList =
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.smokeblue))
             seekBarRed?.thumbTintList = colorStateList
             seekBarGreen?.thumbTintList = colorStateList
             seekBarBlue?.thumbTintList = colorStateList
@@ -276,14 +305,14 @@ class CustomDialog: DialogFragment(),
         buttonLeftBlue?.setOnClickListener(this)
         buttonRightRed?.setOnClickListener(this)
         buttonRightGreen?.setOnClickListener(this)
-        buttonRightBlue ?.setOnClickListener(this)
+        buttonRightBlue?.setOnClickListener(this)
         //長押しのためタッチリスナーも設定
         buttonLeftRed?.setOnTouchListener(this)
         buttonLeftGreen?.setOnTouchListener(this)
         buttonLeftBlue?.setOnTouchListener(this)
         buttonRightRed?.setOnTouchListener(this)
         buttonRightGreen?.setOnTouchListener(this)
-        buttonRightBlue ?.setOnTouchListener(this)
+        buttonRightBlue?.setOnTouchListener(this)
 
         imageViewPalette0?.setOnClickListener(this)
         imageViewPalette1?.setOnClickListener(this)
@@ -326,7 +355,7 @@ class CustomDialog: DialogFragment(),
         textureViewCamera?.surfaceTextureListener = this
         textureViewCamera?.setOnTouchListener { view, motionEvent ->
             //テクスチャービュー押下時
-            textureViewCameraClick(view,motionEvent)
+            textureViewCameraClick(view, motionEvent)
             true
         }
 
@@ -341,28 +370,32 @@ class CustomDialog: DialogFragment(),
             //二度押しを禁止
             v.isEnabled = false
 
-            when(v.id) {
+            when (v.id) {
                 buttonDecided?.id -> {
                     //OKボタン押下時
                     buttonDecidedClick()
                 }
+
                 buttonCamera1?.id,
-                buttonCamera2?.id-> {
+                buttonCamera2?.id -> {
                     //カメラボタン押下時
                     buttonCameraClick()
                 }
+
                 buttonLeftRed?.id,
                 buttonLeftGreen?.id,
                 buttonLeftBlue?.id -> {
                     //左ボタン押下時
                     buttonLeftClick(v.id)
                 }
+
                 buttonRightRed?.id,
                 buttonRightGreen?.id,
                 buttonRightBlue?.id -> {
                     //右ボタン押下時
                     buttonRightClick(v.id)
                 }
+
                 imageViewPalette0?.id,
                 imageViewPalette1?.id,
                 imageViewPalette2?.id,
@@ -400,8 +433,7 @@ class CustomDialog: DialogFragment(),
                     colorPaletteClick(v as ImageView)
                 }
             }
-        }
-        finally {
+        } finally {
             v.isEnabled = true
         }
     }
@@ -409,13 +441,13 @@ class CustomDialog: DialogFragment(),
     /**
      * OKボタン押下時
      */
-    private fun buttonDecidedClick() : Unit {
+    private fun buttonDecidedClick(): Unit {
         //ビットマップを取得する
         val bitmap = (imageViewSelectedColor?.drawable as BitmapDrawable).bitmap
 
-        val rgb :Triple<Int, Int, Int> = Utility.getRGBFromBitmap(bitmap,0,0)
+        val rgb: Triple<Int, Int, Int> = Utility.getRGBFromBitmap(bitmap, 0, 0)
         //メインアクテビティへ選択結果を返却
-        dialogResultListener?.onDialogResult(targetImageView,rgb)
+        dialogResultListener?.onDialogResult(targetImageView, rgb)
 
         dismiss()
     }
@@ -423,25 +455,27 @@ class CustomDialog: DialogFragment(),
     /**
      * カメラボタン押下時
      */
-    private fun buttonCameraClick() : Unit {
+    private fun buttonCameraClick(): Unit {
         //カメラのテクスチャビューを表示(裏で常に起動している)
-        textureViewCamera?.visibility =  View.VISIBLE
+        textureViewCamera?.visibility = View.VISIBLE
     }
 
     /**
      * 左ボタン押下時
      */
-    private fun buttonLeftClick(id : Int) : Unit {
+    private fun buttonLeftClick(id: Int): Unit {
         //該当のシークバーを-1する
         when (id) {
             buttonLeftRed?.id -> {
                 (seekBarRed as SeekBar).progress -= 1
                 textViewValueRed?.text = seekBarRed?.progress.toString()
             }
+
             buttonLeftGreen?.id -> {
                 (seekBarGreen as SeekBar).progress -= 1
                 textViewValueGreen?.text = seekBarGreen?.progress.toString()
             }
+
             buttonLeftBlue?.id -> {
                 (seekBarBlue as SeekBar).progress -= 1
                 textViewValueBlue?.text = seekBarBlue?.progress.toString()
@@ -449,23 +483,32 @@ class CustomDialog: DialogFragment(),
         }
 
         //イメージビューに色を反映
-        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor,seekBarRed?.progress ?: 0,seekBarGreen?.progress ?: 0,  seekBarBlue?.progress ?: 0))
+        imageViewSelectedColor?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewSelectedColor,
+                seekBarRed?.progress ?: 0,
+                seekBarGreen?.progress ?: 0,
+                seekBarBlue?.progress ?: 0
+            )
+        )
     }
 
     /**
      * 右ボタン押下時
      */
-    private fun buttonRightClick(id : Int) : Unit {
+    private fun buttonRightClick(id: Int): Unit {
         //該当のシークバーを+1する
         when (id) {
             buttonRightRed?.id -> {
                 (seekBarRed as SeekBar).progress += 1
                 textViewValueRed?.text = seekBarRed?.progress.toString()
             }
+
             buttonRightGreen?.id -> {
                 (seekBarGreen as SeekBar).progress += 1
                 textViewValueGreen?.text = seekBarGreen?.progress.toString()
             }
+
             buttonRightBlue?.id -> {
                 (seekBarBlue as SeekBar).progress += 1
                 textViewValueBlue?.text = seekBarBlue?.progress.toString()
@@ -473,7 +516,14 @@ class CustomDialog: DialogFragment(),
         }
 
         //イメージビューに色を反映
-        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor,seekBarRed?.progress ?: 0,seekBarGreen?.progress ?: 0,  seekBarBlue?.progress ?: 0))
+        imageViewSelectedColor?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewSelectedColor,
+                seekBarRed?.progress ?: 0,
+                seekBarGreen?.progress ?: 0,
+                seekBarBlue?.progress ?: 0
+            )
+        )
     }
 
     /**
@@ -488,7 +538,14 @@ class CustomDialog: DialogFragment(),
         initBlueColor = rGB.component3()
 
         //イメージビューに色を反映
-        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor, initRedColor, initGreenColor,   initBlueColor))
+        imageViewSelectedColor?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewSelectedColor,
+                initRedColor,
+                initGreenColor,
+                initBlueColor
+            )
+        )
         //シークバーへも反映
         seekBarRed?.progress = initRedColor
         seekBarGreen?.progress = initGreenColor
@@ -498,7 +555,7 @@ class CustomDialog: DialogFragment(),
     /**
      * テクスチャービュー押下時
      */
-    private fun textureViewCameraClick(view: View, event: MotionEvent) : Unit {
+    private fun textureViewCameraClick(view: View, event: MotionEvent): Unit {
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -528,19 +585,26 @@ class CustomDialog: DialogFragment(),
                 //最終的なカラーリストへ格納
                 for (color in colorIntList) {
                     touchRedColorList.add(Color.red(color))
-                    touchGreenColorList.add( Color.green(color))
+                    touchGreenColorList.add(Color.green(color))
                     touchBlueColorList.add(Color.blue(color))
                 }
 
                 // リストの要素数を取得する
                 val colorCnt = touchRedColorList.size
                 // 平均を取得する
-                val redColor =  (touchRedColorList.sum().toDouble()/ colorCnt).toInt()
+                val redColor = (touchRedColorList.sum().toDouble() / colorCnt).toInt()
                 val greenColor = (touchGreenColorList.sum().toDouble() / colorCnt).toInt()
                 val blueColor = (touchBlueColorList.sum().toDouble() / colorCnt).toInt()
 
                 //イメージビューに色を反映
-                imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor, redColor, greenColor,   blueColor))
+                imageViewSelectedColor?.setImageBitmap(
+                    Utility.createBitmap(
+                        imageViewSelectedColor,
+                        redColor,
+                        greenColor,
+                        blueColor
+                    )
+                )
                 //シークバーへも反映
                 seekBarRed?.progress = redColor
                 seekBarGreen?.progress = greenColor
@@ -548,20 +612,21 @@ class CustomDialog: DialogFragment(),
             }
         }
         //カメラのテクスチャビューを非表示する
-        textureViewCamera?.visibility =  View.INVISIBLE
+        textureViewCamera?.visibility = View.INVISIBLE
     }
     //endregion
 
     //region ボタン長押しイベント
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        when(v?.id) {
+        when (v?.id) {
             buttonLeftRed?.id,
             buttonLeftGreen?.id,
             buttonLeftBlue?.id -> {
                 //左ボタン押下時
                 buttonLeftLongClick((v as View).id, event as MotionEvent)
             }
+
             buttonRightRed?.id,
             buttonRightGreen?.id,
             buttonRightBlue?.id -> {
@@ -576,7 +641,7 @@ class CustomDialog: DialogFragment(),
     /**
      * 左ボタン長押し時
      */
-    fun buttonLeftLongClick(id : Int, event: MotionEvent) {
+    fun buttonLeftLongClick(id: Int, event: MotionEvent) {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 // 長押しが開始されたときの処理
@@ -589,10 +654,12 @@ class CustomDialog: DialogFragment(),
                                 (seekBarRed as SeekBar).progress -= 1
                                 textViewValueRed?.text = seekBarRed?.progress.toString()
                             }
+
                             buttonLeftGreen?.id -> {
                                 (seekBarGreen as SeekBar).progress -= 1
                                 textViewValueGreen?.text = seekBarGreen?.progress.toString()
                             }
+
                             buttonLeftBlue?.id -> {
                                 (seekBarBlue as SeekBar).progress -= 1
                                 textViewValueBlue?.text = seekBarBlue?.progress.toString()
@@ -600,13 +667,21 @@ class CustomDialog: DialogFragment(),
                         }
 
                         //イメージビューに色を反映
-                        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor,seekBarRed?.progress ?: 0,seekBarGreen?.progress ?: 0,  seekBarBlue?.progress ?: 0))
+                        imageViewSelectedColor?.setImageBitmap(
+                            Utility.createBitmap(
+                                imageViewSelectedColor,
+                                seekBarRed?.progress ?: 0,
+                                seekBarGreen?.progress ?: 0,
+                                seekBarBlue?.progress ?: 0
+                            )
+                        )
 
                         // 再帰呼び出し
                         buttonLeftLongClick(id, event)
                     }
                 }, 50)
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 // 長押しが解除されたときの処理
                 longPressing = false
@@ -619,7 +694,7 @@ class CustomDialog: DialogFragment(),
     /**
      * 右ボタン長押し時
      */
-    fun buttonRightLongClick(id : Int, event: MotionEvent) {
+    fun buttonRightLongClick(id: Int, event: MotionEvent) {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 // 長押しが開始されたときの処理
@@ -632,10 +707,12 @@ class CustomDialog: DialogFragment(),
                                 (seekBarRed as SeekBar).progress += 1
                                 textViewValueRed?.text = seekBarRed?.progress.toString()
                             }
+
                             buttonRightGreen?.id -> {
                                 (seekBarGreen as SeekBar).progress += 1
                                 textViewValueGreen?.text = seekBarGreen?.progress.toString()
                             }
+
                             buttonRightBlue?.id -> {
                                 (seekBarBlue as SeekBar).progress += 1
                                 textViewValueBlue?.text = seekBarBlue?.progress.toString()
@@ -643,7 +720,14 @@ class CustomDialog: DialogFragment(),
                         }
 
                         //イメージビューに色を反映
-                        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor,seekBarRed?.progress ?: 0,seekBarGreen?.progress ?: 0,  seekBarBlue?.progress ?: 0))
+                        imageViewSelectedColor?.setImageBitmap(
+                            Utility.createBitmap(
+                                imageViewSelectedColor,
+                                seekBarRed?.progress ?: 0,
+                                seekBarGreen?.progress ?: 0,
+                                seekBarBlue?.progress ?: 0
+                            )
+                        )
 
                         // 再帰呼び出し
                         buttonRightLongClick(id, event)
@@ -651,6 +735,7 @@ class CustomDialog: DialogFragment(),
                 }, 50)
 
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 // 長押しが解除されたときの処理
                 longPressing = false
@@ -673,18 +758,26 @@ class CustomDialog: DialogFragment(),
                 seekBarRed?.id -> {
                     textViewValueRed?.text = progress.toString()
                 }
+
                 seekBarGreen?.id -> {
                     textViewValueGreen?.text = progress.toString()
                 }
+
                 seekBarBlue?.id -> {
                     textViewValueBlue?.text = progress.toString()
                 }
             }
 
             //イメージビューに色を反映
-            imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor,seekBarRed?.progress ?: 0,seekBarGreen?.progress ?: 0,  seekBarBlue?.progress ?: 0))
-        }
-        finally {
+            imageViewSelectedColor?.setImageBitmap(
+                Utility.createBitmap(
+                    imageViewSelectedColor,
+                    seekBarRed?.progress ?: 0,
+                    seekBarGreen?.progress ?: 0,
+                    seekBarBlue?.progress ?: 0
+                )
+            )
+        } finally {
             seekBar?.isEnabled = true
         }
     }
@@ -708,7 +801,14 @@ class CustomDialog: DialogFragment(),
      */
     override fun onGlobalLayout() {
         //イメージビューに色を反映
-        imageViewSelectedColor?.setImageBitmap(Utility.createBitmap(imageViewSelectedColor, initRedColor, initGreenColor,   initBlueColor))
+        imageViewSelectedColor?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewSelectedColor,
+                initRedColor,
+                initGreenColor,
+                initBlueColor
+            )
+        )
         //シークバーへも反映
         seekBarRed?.progress = initRedColor
         seekBarGreen?.progress = initGreenColor
@@ -757,39 +857,270 @@ class CustomDialog: DialogFragment(),
         val palette32 = Utility.getColorCodeToRGB(sampleColorList[32])
 
         //カラーパレットへサンプルカラーを設定
-        imageViewPalette0?.setImageBitmap(Utility.createBitmap(imageViewPalette0, palette0.component1(),palette0.component2(),  palette0.component3()))
-        imageViewPalette1?.setImageBitmap(Utility.createBitmap(imageViewPalette1, palette1.component1(),palette1.component2(),  palette1.component3()))
-        imageViewPalette2?.setImageBitmap(Utility.createBitmap(imageViewPalette2, palette2.component1(),palette2.component2(),  palette2.component3()))
-        imageViewPalette3?.setImageBitmap(Utility.createBitmap(imageViewPalette3, palette3.component1(),palette3.component2(),  palette3.component3()))
-        imageViewPalette4?.setImageBitmap(Utility.createBitmap(imageViewPalette4, palette4.component1(),palette4.component2(),  palette4.component3()))
-        imageViewPalette5?.setImageBitmap(Utility.createBitmap(imageViewPalette5, palette5.component1(),palette5.component2(),  palette5.component3()))
-        imageViewPalette6?.setImageBitmap(Utility.createBitmap(imageViewPalette6, palette6.component1(),palette6.component2(),  palette6.component3()))
-        imageViewPalette7?.setImageBitmap(Utility.createBitmap(imageViewPalette7, palette7.component1(),palette7.component2(),  palette7.component3()))
-        imageViewPalette8?.setImageBitmap(Utility.createBitmap(imageViewPalette8, palette8.component1(),palette8.component2(),  palette8.component3()))
-        imageViewPalette9?.setImageBitmap(Utility.createBitmap(imageViewPalette9, palette9.component1(),palette9.component2(),  palette9.component3()))
-        imageViewPalette10?.setImageBitmap(Utility.createBitmap(imageViewPalette10, palette10.component1(),palette10.component2(),  palette10.component3()))
-        imageViewPalette11?.setImageBitmap(Utility.createBitmap(imageViewPalette11, palette11.component1(),palette11.component2(),  palette11.component3()))
-        imageViewPalette12?.setImageBitmap(Utility.createBitmap(imageViewPalette12, palette12.component1(),palette12.component2(),  palette12.component3()))
-        imageViewPalette13?.setImageBitmap(Utility.createBitmap(imageViewPalette13, palette13.component1(),palette13.component2(),  palette13.component3()))
-        imageViewPalette14?.setImageBitmap(Utility.createBitmap(imageViewPalette14, palette14.component1(),palette14.component2(),  palette14.component3()))
-        imageViewPalette15?.setImageBitmap(Utility.createBitmap(imageViewPalette15, palette15.component1(),palette15.component2(),  palette15.component3()))
-        imageViewPalette16?.setImageBitmap(Utility.createBitmap(imageViewPalette16, palette16.component1(),palette16.component2(),  palette16.component3()))
-        imageViewPalette17?.setImageBitmap(Utility.createBitmap(imageViewPalette17, palette17.component1(),palette17.component2(),  palette17.component3()))
-        imageViewPalette18?.setImageBitmap(Utility.createBitmap(imageViewPalette18, palette18.component1(),palette18.component2(),  palette18.component3()))
-        imageViewPalette19?.setImageBitmap(Utility.createBitmap(imageViewPalette19, palette19.component1(),palette19.component2(),  palette19.component3()))
-        imageViewPalette20?.setImageBitmap(Utility.createBitmap(imageViewPalette20, palette20.component1(),palette20.component2(),  palette20.component3()))
-        imageViewPalette21?.setImageBitmap(Utility.createBitmap(imageViewPalette21, palette21.component1(),palette21.component2(),  palette21.component3()))
-        imageViewPalette22?.setImageBitmap(Utility.createBitmap(imageViewPalette22, palette22.component1(),palette22.component2(),  palette22.component3()))
-        imageViewPalette23?.setImageBitmap(Utility.createBitmap(imageViewPalette23, palette23.component1(),palette23.component2(),  palette23.component3()))
-        imageViewPalette24?.setImageBitmap(Utility.createBitmap(imageViewPalette24, palette24.component1(),palette24.component2(),  palette24.component3()))
-        imageViewPalette25?.setImageBitmap(Utility.createBitmap(imageViewPalette25, palette25.component1(),palette25.component2(),  palette25.component3()))
-        imageViewPalette26?.setImageBitmap(Utility.createBitmap(imageViewPalette26, palette26.component1(),palette26.component2(),  palette26.component3()))
-        imageViewPalette27?.setImageBitmap(Utility.createBitmap(imageViewPalette27, palette27.component1(),palette27.component2(),  palette27.component3()))
-        imageViewPalette28?.setImageBitmap(Utility.createBitmap(imageViewPalette28, palette28.component1(),palette28.component2(),  palette28.component3()))
-        imageViewPalette29?.setImageBitmap(Utility.createBitmap(imageViewPalette29, palette29.component1(),palette29.component2(),  palette29.component3()))
-        imageViewPalette30?.setImageBitmap(Utility.createBitmap(imageViewPalette30, palette30.component1(),palette30.component2(),  palette30.component3()))
-        imageViewPalette31?.setImageBitmap(Utility.createBitmap(imageViewPalette31, palette31.component1(),palette31.component2(),  palette31.component3()))
-        imageViewPalette32?.setImageBitmap(Utility.createBitmap(imageViewPalette32, palette32.component1(),palette32.component2(),  palette32.component3()))
+        imageViewPalette0?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette0,
+                palette0.component1(),
+                palette0.component2(),
+                palette0.component3()
+            )
+        )
+        imageViewPalette1?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette1,
+                palette1.component1(),
+                palette1.component2(),
+                palette1.component3()
+            )
+        )
+        imageViewPalette2?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette2,
+                palette2.component1(),
+                palette2.component2(),
+                palette2.component3()
+            )
+        )
+        imageViewPalette3?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette3,
+                palette3.component1(),
+                palette3.component2(),
+                palette3.component3()
+            )
+        )
+        imageViewPalette4?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette4,
+                palette4.component1(),
+                palette4.component2(),
+                palette4.component3()
+            )
+        )
+        imageViewPalette5?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette5,
+                palette5.component1(),
+                palette5.component2(),
+                palette5.component3()
+            )
+        )
+        imageViewPalette6?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette6,
+                palette6.component1(),
+                palette6.component2(),
+                palette6.component3()
+            )
+        )
+        imageViewPalette7?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette7,
+                palette7.component1(),
+                palette7.component2(),
+                palette7.component3()
+            )
+        )
+        imageViewPalette8?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette8,
+                palette8.component1(),
+                palette8.component2(),
+                palette8.component3()
+            )
+        )
+        imageViewPalette9?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette9,
+                palette9.component1(),
+                palette9.component2(),
+                palette9.component3()
+            )
+        )
+        imageViewPalette10?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette10,
+                palette10.component1(),
+                palette10.component2(),
+                palette10.component3()
+            )
+        )
+        imageViewPalette11?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette11,
+                palette11.component1(),
+                palette11.component2(),
+                palette11.component3()
+            )
+        )
+        imageViewPalette12?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette12,
+                palette12.component1(),
+                palette12.component2(),
+                palette12.component3()
+            )
+        )
+        imageViewPalette13?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette13,
+                palette13.component1(),
+                palette13.component2(),
+                palette13.component3()
+            )
+        )
+        imageViewPalette14?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette14,
+                palette14.component1(),
+                palette14.component2(),
+                palette14.component3()
+            )
+        )
+        imageViewPalette15?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette15,
+                palette15.component1(),
+                palette15.component2(),
+                palette15.component3()
+            )
+        )
+        imageViewPalette16?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette16,
+                palette16.component1(),
+                palette16.component2(),
+                palette16.component3()
+            )
+        )
+        imageViewPalette17?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette17,
+                palette17.component1(),
+                palette17.component2(),
+                palette17.component3()
+            )
+        )
+        imageViewPalette18?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette18,
+                palette18.component1(),
+                palette18.component2(),
+                palette18.component3()
+            )
+        )
+        imageViewPalette19?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette19,
+                palette19.component1(),
+                palette19.component2(),
+                palette19.component3()
+            )
+        )
+        imageViewPalette20?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette20,
+                palette20.component1(),
+                palette20.component2(),
+                palette20.component3()
+            )
+        )
+        imageViewPalette21?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette21,
+                palette21.component1(),
+                palette21.component2(),
+                palette21.component3()
+            )
+        )
+        imageViewPalette22?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette22,
+                palette22.component1(),
+                palette22.component2(),
+                palette22.component3()
+            )
+        )
+        imageViewPalette23?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette23,
+                palette23.component1(),
+                palette23.component2(),
+                palette23.component3()
+            )
+        )
+        imageViewPalette24?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette24,
+                palette24.component1(),
+                palette24.component2(),
+                palette24.component3()
+            )
+        )
+        imageViewPalette25?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette25,
+                palette25.component1(),
+                palette25.component2(),
+                palette25.component3()
+            )
+        )
+        imageViewPalette26?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette26,
+                palette26.component1(),
+                palette26.component2(),
+                palette26.component3()
+            )
+        )
+        imageViewPalette27?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette27,
+                palette27.component1(),
+                palette27.component2(),
+                palette27.component3()
+            )
+        )
+        imageViewPalette28?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette28,
+                palette28.component1(),
+                palette28.component2(),
+                palette28.component3()
+            )
+        )
+        imageViewPalette29?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette29,
+                palette29.component1(),
+                palette29.component2(),
+                palette29.component3()
+            )
+        )
+        imageViewPalette30?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette30,
+                palette30.component1(),
+                palette30.component2(),
+                palette30.component3()
+            )
+        )
+        imageViewPalette31?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette31,
+                palette31.component1(),
+                palette31.component2(),
+                palette31.component3()
+            )
+        )
+        imageViewPalette32?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewPalette32,
+                palette32.component1(),
+                palette32.component2(),
+                palette32.component3()
+            )
+        )
     }
 
     /**
@@ -850,7 +1181,11 @@ class CustomDialog: DialogFragment(),
         //カメラのIDを選択
         val cameraId = cameraManager.cameraIdList[0]
 
-        if (ActivityCompat.checkSelfPermission(parentContext as Context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                parentContext as Context,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {
                 override fun onOpened(cameraDevice: CameraDevice) {
                     camera = cameraDevice
@@ -873,23 +1208,28 @@ class CustomDialog: DialogFragment(),
         val texture = textureViewCamera?.surfaceTexture
         val surface = Surface(texture)
 
-        captureRequestBuilder =(camera as CameraDevice).createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+        captureRequestBuilder =
+            (camera as CameraDevice).createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         captureRequestBuilder.addTarget(surface)
 
-        camera?.createCaptureSession(listOf(surface), object : CameraCaptureSession.StateCallback() {
-            override fun onConfigured(session: CameraCaptureSession) {
-                if (camera == null) {
-                    return
+        camera?.createCaptureSession(
+            listOf(surface),
+            object : CameraCaptureSession.StateCallback() {
+                override fun onConfigured(session: CameraCaptureSession) {
+                    if (camera == null) {
+                        return
+                    }
+
+                    cameraCaptureSession = session
+                    updatePreview()
                 }
 
-                cameraCaptureSession = session
-                updatePreview()
-            }
-
-            override fun onConfigureFailed(session: CameraCaptureSession) {
-                // キャプチャーセッションのセットアップに失敗したときの処理
-            }
-        }, null)
+                override fun onConfigureFailed(session: CameraCaptureSession) {
+                    // キャプチャーセッションのセットアップに失敗したときの処理
+                }
+            },
+            null
+        )
     }
 
     private fun updatePreview() {

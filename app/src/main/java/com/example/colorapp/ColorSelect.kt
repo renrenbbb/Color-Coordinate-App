@@ -12,34 +12,39 @@ class ColorSelect {
     /**
      * 閾値(黒色)
      */
-    private val blackThreshold : Int = 70
+    private val blackThreshold: Int = 70
+
     /**
      * 閾値(白色)
      */
-    private val whiteThreshold : Int = 235
+    private val whiteThreshold: Int = 235
+
     /**
      * 閾値(モノトーン)
      */
-    private val monotoneThreshold : Int = 10
+    private val monotoneThreshold: Int = 10
+
     /**
      * 閾値(トーン)：255, 255,255の合計の半分の値
      */
     private val toneThreshold: Int = 383
+
     /**
      * 提案する色の最大数
      */
-    private val suggestMaxCount : Int = 30
+    private val suggestMaxCount: Int = 30
+
     /**
      * 提案する色の最小数
      */
-    private val suggestMinCount : Int = 10
+    private val suggestMinCount: Int = 10
     //endregion
 
     //region カラーリスト
     /**
      * 赤系
      */
-    private val redColor : Array<String> =
+    private val redColor: Array<String> =
         arrayOf(
             "#FF0000",
             "#800000",
@@ -53,10 +58,11 @@ class ColorSelect {
             "#F00A23",
             "#FF3C3C"
         )
+
     /**
      * 緑系
      */
-    private val greenColor : Array<String> =
+    private val greenColor: Array<String> =
         arrayOf(
             "#32CD32",
             "#006400",
@@ -75,10 +81,11 @@ class ColorSelect {
             "#6B8E23",
             "#808000"
         )
+
     /**
      * 青系
      */
-    private val blueColor : Array<String> =
+    private val blueColor: Array<String> =
         arrayOf(
             "#708090",
             "#165E83",
@@ -110,10 +117,11 @@ class ColorSelect {
             "#0037FF",
             "#E0FFFF"
         )
+
     /**
      * ピンク系
      */
-    private val pinkColor : Array<String> =
+    private val pinkColor: Array<String> =
         arrayOf(
             "#FF69B4",
             "#FFB6C1",
@@ -124,10 +132,11 @@ class ColorSelect {
             "#FF96A5",
             "#FAEBD7"
         )
+
     /**
      * 黄色系
      */
-    private val yellowColor : Array<String> =
+    private val yellowColor: Array<String> =
         arrayOf(
             "#F8B400",
             "#FFD700",
@@ -137,10 +146,11 @@ class ColorSelect {
             "#FFFF0A",
             "#FFFF96"
         )
+
     /**
      * オレンジ系
      */
-    private val orangeColor : Array<String> =
+    private val orangeColor: Array<String> =
         arrayOf(
             "#FFA500",
             "#FFA564",
@@ -149,10 +159,11 @@ class ColorSelect {
             "#FFA000",
             "#FFAA50"
         )
+
     /**
      * 紫系
      */
-    private val purpleColor : Array<String> =
+    private val purpleColor: Array<String> =
         arrayOf(
             "#BC8F8F",
             "#B3424A",
@@ -171,10 +182,11 @@ class ColorSelect {
             "#DB7093",
             "#C896A5"
         )
+
     /**
      * ベージュ系
      */
-    private val beigeColor : Array<String> =
+    private val beigeColor: Array<String> =
         arrayOf(
             "#DEB887",
             "#F5DEB3",
@@ -183,30 +195,33 @@ class ColorSelect {
             "#FFE4C4",
             "#BDB76B"
         )
+
     /**
      * ブラウン系
      */
-    private val brownColor : Array<String> =
+    private val brownColor: Array<String> =
         arrayOf(
             "#CD853F",
             "#8B4513",
             "#A0522D",
             "#D2B48C"
         )
+
     /**
      * 白系
      */
-    private val whiteColor : Array<String> =
+    private val whiteColor: Array<String> =
         arrayOf(
             "#FFFFFF",
             "#FFFFDC",
             "#F5F5FF",
             "#FFFFCD"
         )
+
     /**
      * 黒系
      */
-    private val blackColor : Array<String> =
+    private val blackColor: Array<String> =
         arrayOf(
             "#000000",
             "#323232",
@@ -215,10 +230,11 @@ class ColorSelect {
             "#1E1E00",
             "#190000"
         )
+
     /**
      * グレー系
      */
-    private val grayColor : Array<String> =
+    private val grayColor: Array<String> =
         arrayOf(
             "#464646",
             "#E6E6E6",
@@ -233,17 +249,22 @@ class ColorSelect {
     /**
      * 色み(色相)
      */
-    private enum class hue{
+    private enum class hue {
         //赤
         RED,
+
         //緑
         GREEN,
+
         //赤
         BLUE,
+
         //黄
         YELLOW,
+
         //シアン
         CYAN,
+
         //マゼンタ
         MAGENTA
     }
@@ -253,7 +274,12 @@ class ColorSelect {
     /**
      * 最適な色のリストを返却
      */
-    fun getColorList(season:Utility.season,item : Utility.item, otherRGBList:MutableList<Triple<Int, Int, Int>>,sortFlg:Boolean): MutableList<Int> {
+    fun getColorList(
+        season: Utility.season,
+        item: Utility.item,
+        otherRGBList: MutableList<Triple<Int, Int, Int>>,
+        sortFlg: Boolean
+    ): MutableList<Int> {
 
         val colorList: MutableList<Int> = mutableListOf()
         try {
@@ -264,20 +290,20 @@ class ColorSelect {
             val isWhiteColor1 = checkWhiteColor(otherRGBList[0])
             val isWhiteColor2 = checkWhiteColor(otherRGBList[1])
 
-            var suggestColorList : MutableList<String> = mutableListOf()
-            val resultColorList : MutableList<String> = mutableListOf()
+            var suggestColorList: MutableList<String> = mutableListOf()
+            val resultColorList: MutableList<String> = mutableListOf()
 
             var colorCount = Random(System.currentTimeMillis())
             val min = 1
-            var max  :Int? = null
-            var suggestCount :Int? = null
+            var max: Int? = null
+            var suggestCount: Int? = null
             var uniqueRandomNumbers = mutableSetOf<Int>()
 
-            var suggestColorListList : MutableList<Array<String>> = mutableListOf()
+            var suggestColorListList: MutableList<Array<String>> = mutableListOf()
 
-            if(((isBlackColor1 && isBlackColor2) || (isWhiteColor1 && isWhiteColor2)) ||
-                ((isBlackColor1 && isWhiteColor2) || (isWhiteColor1 && isBlackColor2)))
-            {
+            if (((isBlackColor1 && isBlackColor2) || (isWhiteColor1 && isWhiteColor2)) ||
+                ((isBlackColor1 && isWhiteColor2) || (isWhiteColor1 && isBlackColor2))
+            ) {
                 //▼両方黒色、または両方白色、または両方黒色か白色の場合
                 //すべての色を使用
                 suggestColorListList.add(redColor)
@@ -291,11 +317,10 @@ class ColorSelect {
                 suggestColorListList.add(blackColor)
                 suggestColorListList.add(whiteColor)
                 suggestColorListList.add(grayColor)
-            }
-            else if ((isMonotoneColor1 && isMonotoneColor2) ||
+            } else if ((isMonotoneColor1 && isMonotoneColor2) ||
                 ((isBlackColor1 && isMonotoneColor2) || (isWhiteColor1 && isMonotoneColor2) ||
-                        (isBlackColor2 && isMonotoneColor1) || (isWhiteColor2 && isMonotoneColor1)))
-            {
+                        (isBlackColor2 && isMonotoneColor1) || (isWhiteColor2 && isMonotoneColor1))
+            ) {
                 //両方モノトーン、片方が黒色か白色でもう片方がモノトーンの場合
                 suggestColorListList.add(redColor)
                 suggestColorListList.add(blueColor)
@@ -308,9 +333,7 @@ class ColorSelect {
                 suggestColorListList.add(blackColor)
                 suggestColorListList.add(whiteColor)
                 suggestColorListList.add(grayColor)
-            }
-            else
-            {
+            } else {
                 //その他(色が限定されるパターン)
 
                 //それぞれの色みを取得
@@ -320,12 +343,11 @@ class ColorSelect {
                 val isHighTone1 = isHighToneColor(Utility.getColorCodeFromRGB(otherRGBList[0]))
                 val isHighTone2 = isHighToneColor(Utility.getColorCodeFromRGB(otherRGBList[1]))
 
-                if(hue1 == hue2)
-                {
+                if (hue1 == hue2) {
                     val otherColorList: MutableList<String> = mutableListOf()
 
-                    when(hue1) {
-                        hue.RED-> {
+                    when (hue1) {
+                        hue.RED -> {
                             //選択中の色
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
@@ -341,7 +363,8 @@ class ColorSelect {
 
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
-                        hue.GREEN-> {
+
+                        hue.GREEN -> {
                             suggestColorListList.add(greenColor)
 
                             otherColorList.add(getOneColorCode(redColor))
@@ -355,7 +378,8 @@ class ColorSelect {
 
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
-                        hue.BLUE-> {
+
+                        hue.BLUE -> {
                             suggestColorListList.add(blueColor)
 
                             otherColorList.add(getOneColorCode(redColor))
@@ -369,7 +393,8 @@ class ColorSelect {
 
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
-                        hue.YELLOW-> {
+
+                        hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
@@ -383,7 +408,8 @@ class ColorSelect {
 
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
-                        hue.CYAN-> {
+
+                        hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
 
@@ -397,7 +423,8 @@ class ColorSelect {
 
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
-                        hue.MAGENTA-> {
+
+                        hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
 
@@ -417,55 +444,64 @@ class ColorSelect {
                     suggestColorListList.add(blackColor)
                     suggestColorListList.add(whiteColor)
                     suggestColorListList.add(grayColor)
-                }
-                else {
-                    when(hue1) {
-                        hue.RED-> {
+                } else {
+                    when (hue1) {
+                        hue.RED -> {
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
                         }
-                        hue.GREEN-> {
+
+                        hue.GREEN -> {
                             suggestColorListList.add(greenColor)
                         }
-                        hue.BLUE-> {
+
+                        hue.BLUE -> {
                             suggestColorListList.add(blueColor)
                         }
-                        hue.YELLOW-> {
+
+                        hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
                         }
-                        hue.CYAN-> {
+
+                        hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
                         }
-                        hue.MAGENTA-> {
+
+                        hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
                         }
                     }
 
-                    when(hue2) {
-                        hue.RED-> {
+                    when (hue2) {
+                        hue.RED -> {
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
                         }
-                        hue.GREEN-> {
+
+                        hue.GREEN -> {
                             suggestColorListList.add(greenColor)
                         }
-                        hue.BLUE-> {
+
+                        hue.BLUE -> {
                             suggestColorListList.add(blueColor)
                         }
-                        hue.YELLOW-> {
+
+                        hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
                         }
-                        hue.CYAN-> {
+
+                        hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
                         }
-                        hue.MAGENTA-> {
+
+                        hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
                         }
@@ -479,9 +515,7 @@ class ColorSelect {
                         otherColorList.add(getOneColorCode(whiteColor))
                         otherColorList.add(getOneColorCode(grayColor))
                         suggestColorListList.add(otherColorList.toTypedArray())
-                    }
-                    else
-                    {
+                    } else {
                         suggestColorListList.add(blackColor)
                         suggestColorListList.add(whiteColor)
                         suggestColorListList.add(grayColor)
@@ -489,11 +523,10 @@ class ColorSelect {
                 }
             }
 
-            if(!sortFlg)
-            {
+            if (!sortFlg) {
                 //ソートなしであれば続けて追加
                 for (listItem in suggestColorListList) {
-                    createSuggestColorList(suggestColorList,listItem)
+                    createSuggestColorList(suggestColorList, listItem)
                 }
 
                 //色の提案リストの要素数
@@ -506,7 +539,7 @@ class ColorSelect {
 
                 //ランダムで選定(重複なし)
                 while (uniqueRandomNumbers.size < suggestCount) {
-                    val randomNumber = colorCount.nextInt(min - 1, max )
+                    val randomNumber = colorCount.nextInt(min - 1, max)
                     uniqueRandomNumbers.add(randomNumber)
                 }
 
@@ -514,9 +547,7 @@ class ColorSelect {
                 for (num in uniqueRandomNumbers) {
                     resultColorList.add(suggestColorList[num])
                 }
-            }
-            else
-            {
+            } else {
                 // 色のリストの順番をランダムに入れ替える
                 suggestColorListList.shuffle()
 
@@ -540,7 +571,7 @@ class ColorSelect {
 
                     //ランダムで選定(重複なし)
                     while (uniqueRandomNumbers.size < suggestCount) {
-                        val randomNumber = colorCount.nextInt(min - 1, max )
+                        val randomNumber = colorCount.nextInt(min - 1, max)
                         uniqueRandomNumbers.add(randomNumber)
                     }
 
@@ -551,8 +582,7 @@ class ColorSelect {
                 }
 
                 //提案する色の最大閾値より多い場合は余分な要素を削除
-                if(resultColorList.count() > suggestMaxCount)
-                {
+                if (resultColorList.count() > suggestMaxCount) {
                     val removeCount = resultColorList.count() - suggestMaxCount
                     for (i in 0 until removeCount) {
                         resultColorList.removeAt(Random.nextInt(resultColorList.size))
@@ -561,12 +591,10 @@ class ColorSelect {
             }
 
             //最終的なカラーリストをRGBへ変換
-            for(i in resultColorList.orEmpty()){
+            for (i in resultColorList.orEmpty()) {
                 colorList.add(Color.parseColor(i))
             }
-        }
-        catch(e: Exception)
-        {
+        } catch (e: Exception) {
             //例外エラー発生時は白
             println(e)
             colorList.add(Color.parseColor(whiteColor[0]))
@@ -578,7 +606,10 @@ class ColorSelect {
     /**
      * 2つの色の距離を取得
      */
-    private fun getColorDistance(color1: Triple<Int, Int, Int>, color2: Triple<Int, Int, Int>): Double {
+    private fun getColorDistance(
+        color1: Triple<Int, Int, Int>,
+        color2: Triple<Int, Int, Int>
+    ): Double {
         val redDiff = color1.component1() - color2.component1()
         val greenDiff = color1.component2() - color2.component2()
         val blueDiff = color1.component3() - color2.component3()
@@ -590,7 +621,10 @@ class ColorSelect {
     /**
      * 提案する色のリスト作成
      */
-    private fun createSuggestColorList(suggestColorList: MutableList<String>,targetColorList: Array<String>): Unit {
+    private fun createSuggestColorList(
+        suggestColorList: MutableList<String>,
+        targetColorList: Array<String>
+    ): Unit {
         for (value in targetColorList) {
             suggestColorList.add(value)
         }
@@ -628,9 +662,7 @@ class ColorSelect {
         if (!amountsFirstFlg) {
             //同率1位ではない場合はランク1位を返却
             return colorRank[0]
-        }
-        else
-        {
+        } else {
             if ((colorRank[0] == hue.RED && colorRank[1] == hue.GREEN) ||
                 (colorRank[0] == hue.GREEN && colorRank[1] == hue.RED)
             ) {
@@ -670,10 +702,10 @@ class ColorSelect {
      */
     private fun checkBlackColor(color: Triple<Int, Int, Int>): Boolean {
         //RGBが235以上、かつモノトーンであれば黒色
-        if(!checkMonotone(color)) return false
-        if(color.component1() > blackThreshold) return false
-        if(color.component2() > blackThreshold) return false
-        if(color.component3() > blackThreshold) return false
+        if (!checkMonotone(color)) return false
+        if (color.component1() > blackThreshold) return false
+        if (color.component2() > blackThreshold) return false
+        if (color.component3() > blackThreshold) return false
         return true
     }
 
@@ -682,21 +714,21 @@ class ColorSelect {
      */
     private fun checkWhiteColor(color: Triple<Int, Int, Int>): Boolean {
         //RGBが235以上、かつモノトーンであれば白色
-        if(!checkMonotone(color)) return false
-        if(color.component1() < whiteThreshold) return false
-        if(color.component2() < whiteThreshold) return false
-        if(color.component3() < whiteThreshold) return false
+        if (!checkMonotone(color)) return false
+        if (color.component1() < whiteThreshold) return false
+        if (color.component2() < whiteThreshold) return false
+        if (color.component3() < whiteThreshold) return false
         return true
     }
 
     /**
      * モノトーンチェック
      */
-    private fun checkMonotone(color: Triple<Int, Int, Int>):Boolean {
+    private fun checkMonotone(color: Triple<Int, Int, Int>): Boolean {
         //RGBの差が10未満であればモノトーン
-        if(Math.abs( color.component1() - color.component2()) > monotoneThreshold) return false
-        if(Math.abs( color.component2() - color.component3()) > monotoneThreshold) return false
-        if(Math.abs( color.component3() - color.component1()) > monotoneThreshold) return false
+        if (Math.abs(color.component1() - color.component2()) > monotoneThreshold) return false
+        if (Math.abs(color.component2() - color.component3()) > monotoneThreshold) return false
+        if (Math.abs(color.component3() - color.component1()) > monotoneThreshold) return false
         return true
     }
 

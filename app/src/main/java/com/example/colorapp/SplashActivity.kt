@@ -9,8 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * スプラッシュ用アクテビティ
  */
-class SplashActivity : AppCompatActivity()
-{
+class SplashActivity : AppCompatActivity() {
     //region 定数・変数
     //表示時間
     private val splashTimeOut: Long = 3000
