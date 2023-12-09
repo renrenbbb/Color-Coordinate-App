@@ -17,9 +17,10 @@ class Utility {
     /**
      * 季節
      */
-    enum class season{
+    enum class season {
         //春夏
         SS,
+
         //秋冬
         AW
     }
@@ -27,11 +28,13 @@ class Utility {
     /**
      * アイテム
      */
-    enum class item{
+    enum class item {
         //トップス
         TOPS,
+
         //ボトムス
         BOTTOMS,
+
         //シューズ
         SHOES
     }
@@ -39,9 +42,10 @@ class Utility {
     /**
      * 季節
      */
-    enum class msgLevel{
+    enum class msgLevel {
         //インフォメーション
         INFORMATION,
+
         //エラー
         ERROR
     }
@@ -49,10 +53,14 @@ class Utility {
 
     //region 静的メンバー
     companion object {
-       fun createBitmap(imageView : ImageView?, red:Int, green:Int, blue:Int) : Bitmap {
-            val bitmap = Bitmap.createBitmap( imageView?.width ?:0 ,imageView?.height ?:0, Bitmap.Config.ARGB_8888)
+        fun createBitmap(imageView: ImageView?, red: Int, green: Int, blue: Int): Bitmap {
+            val bitmap = Bitmap.createBitmap(
+                imageView?.width ?: 0,
+                imageView?.height ?: 0,
+                Bitmap.Config.ARGB_8888
+            )
             val canvas = Canvas(bitmap)
-            val color = Color.rgb(red, green,  blue)
+            val color = Color.rgb(red, green, blue)
             canvas.drawColor(color)
 
             return bitmap
@@ -61,7 +69,7 @@ class Utility {
         /**
          * アニメーションを作成
          */
-        fun createAnimation(fromXDelta:Float) : Animation {
+        fun createAnimation(fromXDelta: Float): Animation {
             var animation: Animation
             animation = TranslateAnimation(fromXDelta, 0f, 0f, 0f)
             animation.duration = 800
@@ -85,8 +93,9 @@ class Utility {
         /**
          * RGBからカラーコードを取得
          */
-        fun getColorCodeFromRGB(rgb:Triple<Int, Int, Int>): String {
-            val color = android.graphics.Color.rgb(rgb.component1(), rgb.component2(), rgb.component3())
+        fun getColorCodeFromRGB(rgb: Triple<Int, Int, Int>): String {
+            val color =
+                android.graphics.Color.rgb(rgb.component1(), rgb.component2(), rgb.component3())
             return String.format("#%06X", 0xFFFFFF and color)
         }
 
@@ -101,22 +110,21 @@ class Utility {
 
             return Triple(red, green, blue)
         }
+
         /**
          * ImageViewからRGBを取得
          */
-        fun getRGBFromImageView(imageView: ImageView?) :Triple<Int, Int, Int> {
+        fun getRGBFromImageView(imageView: ImageView?): Triple<Int, Int, Int> {
 
             val drawable = imageView?.drawable
 
-            if(drawable == null){
-                return Triple(0,0,0)
-            }
-            else
-            {
+            if (drawable == null) {
+                return Triple(0, 0, 0)
+            } else {
                 val bitmap = (drawable as BitmapDrawable).bitmap
                 val pixel = bitmap.getPixel(0, 0)
                 //選択時の色を設定
-                return Triple( Color.red(pixel),Color.green(pixel),Color.blue(pixel))
+                return Triple(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
             }
         }
     }
