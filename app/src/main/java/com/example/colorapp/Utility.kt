@@ -17,7 +17,7 @@ class Utility {
     /**
      * 季節
      */
-    enum class season {
+    enum class Season {
         //春夏
         SS,
 
@@ -28,7 +28,7 @@ class Utility {
     /**
      * アイテム
      */
-    enum class item {
+    enum class Item {
         //トップス
         TOPS,
 
@@ -42,7 +42,7 @@ class Utility {
     /**
      * 季節
      */
-    enum class msgLevel {
+    enum class MsgLevel {
         //インフォメーション
         INFORMATION,
 

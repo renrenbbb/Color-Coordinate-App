@@ -214,25 +214,25 @@ class MainActivity : AppCompatActivity(),
 
             viewPager2SampleColor?.offscreenPageLimit = 1
         } else {
-            var season: Utility.season
+            var season: Utility.Season
             if (!(switchSeason as Switch).isChecked) {
-                season = Utility.season.SS
+                season = Utility.Season.SS
             } else {
-                season = Utility.season.AW
+                season = Utility.Season.AW
             }
 
             //どのラジオボタンがチェックされているか判定
-            var item: Utility.item = Utility.item.TOPS
+            var item: Utility.Item = Utility.Item.TOPS
             var otherRGBList: MutableList<Triple<Int, Int, Int>> = mutableListOf()
             when (radioGroupTargetItem?.checkedRadioButtonId) {
                 radioButtonTargetTops?.id -> {
-                    item = Utility.item.TOPS
+                    item = Utility.Item.TOPS
 
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if (imageViewBottomsColor?.drawable == null || imageViewShoesColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.msgLevel.ERROR
+                            Utility.MsgLevel.ERROR
                         )
                         return false
                     }
@@ -245,13 +245,13 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 radioButtonTargetBottoms?.id -> {
-                    item = Utility.item.BOTTOMS
+                    item = Utility.Item.BOTTOMS
 
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if (imageViewTopsColor?.drawable == null || imageViewShoesColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.msgLevel.ERROR
+                            Utility.MsgLevel.ERROR
                         )
                         return false
                     }
@@ -263,12 +263,12 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 radioButtonTargetShoes?.id -> {
-                    item = Utility.item.SHOES
+                    item = Utility.Item.SHOES
 
                     if (imageViewTopsColor?.drawable == null || imageViewBottomsColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.msgLevel.ERROR
+                            Utility.MsgLevel.ERROR
                         )
                         return false
                     }
@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(),
         viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDataList, this, initFlg)
 
         //メッセージを初期化しておく
-        displayMessage(null, Utility.msgLevel.INFORMATION)
+        displayMessage(null, Utility.MsgLevel.INFORMATION)
         return true
     }
 
@@ -317,11 +317,11 @@ class MainActivity : AppCompatActivity(),
         dialog.setDialogResultListener(this)
         dialog.setTargetImageView(targetImageView)
 
-        var season: Utility.season
+        var season: Utility.Season
         if (!(switchSeason as Switch).isChecked) {
-            season = Utility.season.SS
+            season = Utility.Season.SS
         } else {
-            season = Utility.season.AW
+            season = Utility.Season.AW
         }
         dialog.setSeason(season)
 
@@ -334,12 +334,12 @@ class MainActivity : AppCompatActivity(),
     /**
      * メッセージ表示
      */
-    private fun displayMessage(message: String?, msgLevel: Utility.msgLevel): Unit {
+    private fun displayMessage(message: String?, msgLevel: Utility.MsgLevel): Unit {
         textViewMessage?.text = message
 
         var color: Int
         //メッセージレベルを設定
-        if (msgLevel == Utility.msgLevel.INFORMATION) {
+        if (msgLevel == Utility.MsgLevel.INFORMATION) {
             color = R.color.black
         } else {
             color = R.color.red
