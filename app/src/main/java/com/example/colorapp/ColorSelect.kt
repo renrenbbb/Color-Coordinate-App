@@ -249,7 +249,7 @@ class ColorSelect {
     /**
      * 色み(色相)
      */
-    private enum class hue {
+    private enum class Hue {
         //赤
         RED,
 
@@ -275,8 +275,8 @@ class ColorSelect {
      * 最適な色のリストを返却
      */
     fun getColorList(
-        season: Utility.season,
-        item: Utility.item,
+        season: Utility.Season,
+        item: Utility.Item,
         otherRGBList: MutableList<Triple<Int, Int, Int>>,
         sortFlg: Boolean
     ): MutableList<Int> {
@@ -347,7 +347,7 @@ class ColorSelect {
                     val otherColorList: MutableList<String> = mutableListOf()
 
                     when (hue1) {
-                        hue.RED -> {
+                        Hue.RED -> {
                             //選択中の色
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
@@ -364,7 +364,7 @@ class ColorSelect {
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
 
-                        hue.GREEN -> {
+                        Hue.GREEN -> {
                             suggestColorListList.add(greenColor)
 
                             otherColorList.add(getOneColorCode(redColor))
@@ -379,7 +379,7 @@ class ColorSelect {
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
 
-                        hue.BLUE -> {
+                        Hue.BLUE -> {
                             suggestColorListList.add(blueColor)
 
                             otherColorList.add(getOneColorCode(redColor))
@@ -394,7 +394,7 @@ class ColorSelect {
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
 
-                        hue.YELLOW -> {
+                        Hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
@@ -409,7 +409,7 @@ class ColorSelect {
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
 
-                        hue.CYAN -> {
+                        Hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
 
@@ -424,7 +424,7 @@ class ColorSelect {
                             suggestColorListList.add(otherColorList.toTypedArray())
                         }
 
-                        hue.MAGENTA -> {
+                        Hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
 
@@ -446,62 +446,62 @@ class ColorSelect {
                     suggestColorListList.add(grayColor)
                 } else {
                     when (hue1) {
-                        hue.RED -> {
+                        Hue.RED -> {
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
                         }
 
-                        hue.GREEN -> {
+                        Hue.GREEN -> {
                             suggestColorListList.add(greenColor)
                         }
 
-                        hue.BLUE -> {
+                        Hue.BLUE -> {
                             suggestColorListList.add(blueColor)
                         }
 
-                        hue.YELLOW -> {
+                        Hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
                         }
 
-                        hue.CYAN -> {
+                        Hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
                         }
 
-                        hue.MAGENTA -> {
+                        Hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
                         }
                     }
 
                     when (hue2) {
-                        hue.RED -> {
+                        Hue.RED -> {
                             suggestColorListList.add(redColor)
                             suggestColorListList.add(orangeColor)
                         }
 
-                        hue.GREEN -> {
+                        Hue.GREEN -> {
                             suggestColorListList.add(greenColor)
                         }
 
-                        hue.BLUE -> {
+                        Hue.BLUE -> {
                             suggestColorListList.add(blueColor)
                         }
 
-                        hue.YELLOW -> {
+                        Hue.YELLOW -> {
                             suggestColorListList.add(yellowColor)
                             suggestColorListList.add(beigeColor)
                             suggestColorListList.add(brownColor)
                         }
 
-                        hue.CYAN -> {
+                        Hue.CYAN -> {
                             suggestColorListList.add(blueColor)
                             suggestColorListList.add(greenColor)
                         }
 
-                        hue.MAGENTA -> {
+                        Hue.MAGENTA -> {
                             suggestColorListList.add(pinkColor)
                             suggestColorListList.add(purpleColor)
                         }
@@ -633,7 +633,7 @@ class ColorSelect {
     /**
      * 色みを返却
      */
-    private fun getHue(colorCode: String): hue {
+    private fun getHue(colorCode: String): Hue {
         // カラーコードをRGB成分に分解して値へ変換
         val red = colorCode.substring(1, 3)
         val green = colorCode.substring(3, 5)
@@ -647,15 +647,15 @@ class ColorSelect {
         //同率1位フラグ
         val amountsFirstFlg = if (colorValueRank[0] == colorValueRank[1]) true else false
         //色みランク
-        var colorRank: MutableList<hue> = mutableListOf()
+        var colorRank: MutableList<Hue> = mutableListOf()
 
         for (color in colorValueRank) {
-            if (color == redValue && !colorRank.contains(hue.RED)) {
-                colorRank.add(hue.RED)
-            } else if (color == greenValue && !colorRank.contains(hue.GREEN)) {
-                colorRank.add(hue.GREEN)
-            } else if (color == blueValue && !colorRank.contains(hue.BLUE)) {
-                colorRank.add(hue.BLUE)
+            if (color == redValue && !colorRank.contains(Hue.RED)) {
+                colorRank.add(Hue.RED)
+            } else if (color == greenValue && !colorRank.contains(Hue.GREEN)) {
+                colorRank.add(Hue.GREEN)
+            } else if (color == blueValue && !colorRank.contains(Hue.BLUE)) {
+                colorRank.add(Hue.BLUE)
             }
         }
 
@@ -663,25 +663,25 @@ class ColorSelect {
             //同率1位ではない場合はランク1位を返却
             return colorRank[0]
         } else {
-            if ((colorRank[0] == hue.RED && colorRank[1] == hue.GREEN) ||
-                (colorRank[0] == hue.GREEN && colorRank[1] == hue.RED)
+            if ((colorRank[0] == Hue.RED && colorRank[1] == Hue.GREEN) ||
+                (colorRank[0] == Hue.GREEN && colorRank[1] == Hue.RED)
             ) {
                 //赤と緑が同率1位であれば黄色を返却
-                return hue.YELLOW
-            } else if ((colorRank[0] == hue.GREEN && colorRank[1] == hue.BLUE) ||
-                (colorRank[0] == hue.BLUE && colorRank[1] == hue.GREEN)
+                return Hue.YELLOW
+            } else if ((colorRank[0] == Hue.GREEN && colorRank[1] == Hue.BLUE) ||
+                (colorRank[0] == Hue.BLUE && colorRank[1] == Hue.GREEN)
             ) {
                 //緑と青が同率1位であればシアンを返却
-                return hue.CYAN
-            } else if ((colorRank[0] == hue.BLUE && colorRank[1] == hue.RED) ||
-                (colorRank[0] == hue.RED && colorRank[1] == hue.BLUE)
+                return Hue.CYAN
+            } else if ((colorRank[0] == Hue.BLUE && colorRank[1] == Hue.RED) ||
+                (colorRank[0] == Hue.RED && colorRank[1] == Hue.BLUE)
             ) {
                 //青と赤が同率1位であればマゼンタを返却
-                return hue.MAGENTA
+                return Hue.MAGENTA
             }
         }
 
-        return hue.RED
+        return Hue.RED
     }
 
     /**
