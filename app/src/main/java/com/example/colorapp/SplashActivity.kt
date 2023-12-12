@@ -2,9 +2,11 @@ package com.example.colorapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * スプラッシュ用アクテビティ
@@ -26,11 +28,12 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         // スプラッシュ画面が表示された後にメインアクティビティに遷移する
-        Handler().postDelayed({
+        MainScope().launch {
+            delay(splashTimeOut)
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, splashTimeOut)
+        }
     }
     //endregion
 }
