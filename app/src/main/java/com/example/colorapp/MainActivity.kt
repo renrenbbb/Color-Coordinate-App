@@ -214,25 +214,25 @@ class MainActivity : AppCompatActivity(),
 
             viewPager2SampleColor?.offscreenPageLimit = 1
         } else {
-            var season: Utility.Season
+            var season: Season
             if (!(switchSeason as Switch).isChecked) {
-                season = Utility.Season.SS
+                season = Season.SS
             } else {
-                season = Utility.Season.AW
+                season = Season.AW
             }
 
             //どのラジオボタンがチェックされているか判定
-            var item: Utility.Item = Utility.Item.TOPS
+            var item: Item = Item.TOPS
             var otherRGBList: MutableList<Triple<Int, Int, Int>> = mutableListOf()
             when (radioGroupTargetItem?.checkedRadioButtonId) {
                 radioButtonTargetTops?.id -> {
-                    item = Utility.Item.TOPS
+                    item = Item.TOPS
 
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if (imageViewBottomsColor?.drawable == null || imageViewShoesColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.MsgLevel.ERROR
+                            MsgLevel.ERROR
                         )
                         return false
                     }
@@ -245,13 +245,13 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 radioButtonTargetBottoms?.id -> {
-                    item = Utility.Item.BOTTOMS
+                    item = Item.BOTTOMS
 
                     //色を選択していない場合はエラーメッセージを表示して終了
                     if (imageViewTopsColor?.drawable == null || imageViewShoesColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.MsgLevel.ERROR
+                            MsgLevel.ERROR
                         )
                         return false
                     }
@@ -263,12 +263,12 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 radioButtonTargetShoes?.id -> {
-                    item = Utility.Item.SHOES
+                    item = Item.SHOES
 
                     if (imageViewTopsColor?.drawable == null || imageViewBottomsColor?.drawable == null) {
                         displayMessage(
                             resources.getString(R.string.error_selectedcolor),
-                            Utility.MsgLevel.ERROR
+                            MsgLevel.ERROR
                         )
                         return false
                     }
@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(),
         viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDataList, this, initFlg)
 
         //メッセージを初期化しておく
-        displayMessage(null, Utility.MsgLevel.INFORMATION)
+        displayMessage(null, MsgLevel.INFORMATION)
         return true
     }
 
@@ -317,11 +317,11 @@ class MainActivity : AppCompatActivity(),
         dialog.setDialogResultListener(this)
         dialog.setTargetImageView(targetImageView)
 
-        var season: Utility.Season
+        var season: Season
         if (!(switchSeason as Switch).isChecked) {
-            season = Utility.Season.SS
+            season = Season.SS
         } else {
-            season = Utility.Season.AW
+            season = Season.AW
         }
         dialog.setSeason(season)
 
@@ -334,12 +334,12 @@ class MainActivity : AppCompatActivity(),
     /**
      * メッセージ表示
      */
-    private fun displayMessage(message: String?, msgLevel: Utility.MsgLevel): Unit {
+    private fun displayMessage(message: String?, msgLevel: MsgLevel): Unit {
         textViewMessage?.text = message
 
         var color: Int
         //メッセージレベルを設定
-        if (msgLevel == Utility.MsgLevel.INFORMATION) {
+        if (msgLevel == MsgLevel.INFORMATION) {
             color = R.color.black
         } else {
             color = R.color.red

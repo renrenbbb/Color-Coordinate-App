@@ -55,7 +55,7 @@ class CustomDialog : DialogFragment(),
     private var initRedColor: Int = 0
     private var initGreenColor: Int = 0
     private var initBlueColor: Int = 0
-    private var season: Utility.Season = Utility.Season.SS
+    private var season: Season = Season.SS
     private var camera: CameraDevice? = null
     private lateinit var cameraCaptureSession: CameraCaptureSession
     private lateinit var captureRequestBuilder: CaptureRequest.Builder
@@ -142,7 +142,7 @@ class CustomDialog : DialogFragment(),
     }
 
     //region 季節設定
-    fun setSeason(season: Utility.Season) {
+    fun setSeason(season: Season) {
         this.season = season
     }
 
@@ -191,7 +191,7 @@ class CustomDialog : DialogFragment(),
         buttonRightGreen = dialog.findViewById<Button>(R.id.buttonRightGreen)
         buttonRightBlue = dialog.findViewById<Button>(R.id.buttonRightBlue)
 
-        if (season == Utility.Season.SS) {
+        if (season == Season.SS) {
             buttonDecided?.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),

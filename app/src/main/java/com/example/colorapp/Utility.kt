@@ -11,45 +11,48 @@ import android.widget.ImageView
 /**
  * 他のクラスから呼び出し可能な関数群
  */
+
+/**
+ * 季節
+ */
+enum class Season {
+    //春夏
+    SS,
+
+    //秋冬
+    AW
+}
+
+/**
+ * アイテム
+ */
+enum class Item {
+    //トップス
+    TOPS,
+
+    //ボトムス
+    BOTTOMS,
+
+    //シューズ
+    SHOES
+}
+
+/**
+ * 季節
+ */
+enum class MsgLevel {
+    //インフォメーション
+    INFORMATION,
+
+    //エラー
+    ERROR
+}
+
+/**
+ * 共通
+ */
 class Utility {
 
-    //region 列挙型
-    /**
-     * 季節
-     */
-    enum class Season {
-        //春夏
-        SS,
-
-        //秋冬
-        AW
-    }
-
-    /**
-     * アイテム
-     */
-    enum class Item {
-        //トップス
-        TOPS,
-
-        //ボトムス
-        BOTTOMS,
-
-        //シューズ
-        SHOES
-    }
-
-    /**
-     * 季節
-     */
-    enum class MsgLevel {
-        //インフォメーション
-        INFORMATION,
-
-        //エラー
-        ERROR
-    }
-    //endregion
 
     //region 静的メンバー
     companion object {
