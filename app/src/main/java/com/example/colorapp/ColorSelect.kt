@@ -277,7 +277,7 @@ class ColorSelect {
     fun getColorList(
         season: Season,
         item: Item,
-        otherRGBList: MutableList<Triple<Int, Int, Int>>,
+        otherRGBList: MutableList<RGB>,
         sortFlg: Boolean
     ): MutableList<Int> {
 
@@ -607,12 +607,12 @@ class ColorSelect {
      * 2つの色の距離を取得
      */
     private fun getColorDistance(
-        color1: Triple<Int, Int, Int>,
-        color2: Triple<Int, Int, Int>
+        color1: RGB,
+        color2: RGB
     ): Double {
-        val redDiff = color1.component1() - color2.component1()
-        val greenDiff = color1.component2() - color2.component2()
-        val blueDiff = color1.component3() - color2.component3()
+        val redDiff = color1.red - color2.red
+        val greenDiff = color1.green - color2.green
+        val blueDiff = color1.blue - color2.blue
 
         //ユークリッド距離を計算
         return sqrt((redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff).toDouble())
@@ -700,35 +700,35 @@ class ColorSelect {
     /**
      * 黒色チェック
      */
-    private fun checkBlackColor(color: Triple<Int, Int, Int>): Boolean {
+    private fun checkBlackColor(rgb: RGB): Boolean {
         //RGBが235以上、かつモノトーンであれば黒色
-        if (!checkMonotone(color)) return false
-        if (color.component1() > blackThreshold) return false
-        if (color.component2() > blackThreshold) return false
-        if (color.component3() > blackThreshold) return false
+        if (!checkMonotone(rgb)) return false
+        if (rgb.red > blackThreshold) return false
+        if (rgb.green > blackThreshold) return false
+        if (rgb.blue > blackThreshold) return false
         return true
     }
 
     /**
      * 白色チェック
      */
-    private fun checkWhiteColor(color: Triple<Int, Int, Int>): Boolean {
+    private fun checkWhiteColor(rgb: RGB): Boolean {
         //RGBが235以上、かつモノトーンであれば白色
-        if (!checkMonotone(color)) return false
-        if (color.component1() < whiteThreshold) return false
-        if (color.component2() < whiteThreshold) return false
-        if (color.component3() < whiteThreshold) return false
+        if (!checkMonotone(rgb)) return false
+        if (rgb.red < whiteThreshold) return false
+        if (rgb.green < whiteThreshold) return false
+        if (rgb.blue < whiteThreshold) return false
         return true
     }
 
     /**
      * モノトーンチェック
      */
-    private fun checkMonotone(color: Triple<Int, Int, Int>): Boolean {
+    private fun checkMonotone(color: RGB): Boolean {
         //RGBの差が10未満であればモノトーン
-        if (Math.abs(color.component1() - color.component2()) > monotoneThreshold) return false
-        if (Math.abs(color.component2() - color.component3()) > monotoneThreshold) return false
-        if (Math.abs(color.component3() - color.component1()) > monotoneThreshold) return false
+        if (Math.abs(color.red - color.green) > monotoneThreshold) return false
+        if (Math.abs(color.green - color.blue) > monotoneThreshold) return false
+        if (Math.abs(color.blue - color.red) > monotoneThreshold) return false
         return true
     }
 
