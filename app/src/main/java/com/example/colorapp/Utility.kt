@@ -85,51 +85,56 @@ class Utility {
         /**
          * ビットマップからRGBを取得
          */
-        fun getRGBFromBitmap(bitmap: Bitmap, x: Int, y: Int): Triple<Int, Int, Int> {
+        fun getRGBFromBitmap(bitmap: Bitmap, x: Int, y: Int): RGB {
             val pixel = bitmap.getPixel(x, y)
             val red = Color.red(pixel)
             val green = Color.green(pixel)
             val blue = Color.blue(pixel)
-            return Triple(red, green, blue)
+
+            return RGB(red, green, blue)
         }
 
         /**
          * RGBからカラーコードを取得
          */
-        fun getColorCodeFromRGB(rgb: Triple<Int, Int, Int>): String {
-            val color =
-                android.graphics.Color.rgb(rgb.component1(), rgb.component2(), rgb.component3())
+        fun getColorCodeFromRGB(rgb: RGB): String {
+            val color = Color.rgb(rgb.red, rgb.green, rgb.blue)
             return String.format("#%06X", 0xFFFFFF and color)
         }
 
         /**
          * カラーコードからRGBを取得
          */
-        fun getColorCodeToRGB(colorCode: String): Triple<Int, Int, Int> {
+        fun getColorCodeToRGB(colorCode: String): RGB {
             val hex = colorCode.removePrefix("#")
             val red = hex.substring(0, 2).toInt(16)
             val green = hex.substring(2, 4).toInt(16)
             val blue = hex.substring(4, 6).toInt(16)
 
-            return Triple(red, green, blue)
+            return RGB(red, green, blue)
         }
 
         /**
          * ImageViewからRGBを取得
          */
-        fun getRGBFromImageView(imageView: ImageView?): Triple<Int, Int, Int> {
+        fun getRGBFromImageView(imageView: ImageView?): RGB {
 
             val drawable = imageView?.drawable
 
             if (drawable == null) {
-                return Triple(0, 0, 0)
+                return RGB(0, 0, 0)
             } else {
                 val bitmap = (drawable as BitmapDrawable).bitmap
                 val pixel = bitmap.getPixel(0, 0)
                 //選択時の色を設定
-                return Triple(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
+                return RGB(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
             }
         }
     }
     //endregion
 }
+
+/**
+ * RGBクラス
+ */
+data class RGB(val red: Int, val green: Int, val blue: Int)

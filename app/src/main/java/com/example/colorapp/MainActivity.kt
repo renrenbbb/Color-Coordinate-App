@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity(),
 
             //どのラジオボタンがチェックされているか判定
             var item: Item = Item.TOPS
-            var otherRGBList: MutableList<Triple<Int, Int, Int>> = mutableListOf()
+            var otherRGBList: MutableList<RGB> = mutableListOf()
             when (radioGroupTargetItem?.checkedRadioButtonId) {
                 radioButtonTargetTops?.id -> {
                     item = Item.TOPS
@@ -349,15 +349,15 @@ class MainActivity : AppCompatActivity(),
     //endregion
 
     //region CustomDialog関連
-    override fun onDialogResult(targetImageView: ImageView?, rgb: Triple<Int, Int, Int>) {
+    override fun onDialogResult(targetImageView: ImageView?, rgb: RGB) {
         //ダイアログの終了を検知
         //選択した色を反映
         targetImageView?.setImageBitmap(
             Utility.createBitmap(
                 targetImageView,
-                rgb.component1(),
-                rgb.component2(),
-                rgb.component3()
+                rgb.red,
+                rgb.green,
+                rgb.blue
             )
         )
     }

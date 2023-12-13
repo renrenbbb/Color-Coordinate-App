@@ -44,7 +44,7 @@ class CustomDialog : DialogFragment(),
 
     //region インターフェース
     interface DialogResultListener {
-        fun onDialogResult(targetImageView: ImageView?, rgb: Triple<Int, Int, Int>)
+        fun onDialogResult(targetImageView: ImageView?, rgb: RGB)
     }
     //endregion
 
@@ -136,9 +136,9 @@ class CustomDialog : DialogFragment(),
         targetImageView = imageView
         val rGB = Utility.getRGBFromImageView((targetImageView))
 
-        initRedColor = rGB.component1()
-        initGreenColor = rGB.component2()
-        initBlueColor = rGB.component3()
+        initRedColor = rGB.red
+        initGreenColor = rGB.green
+        initBlueColor = rGB.blue
     }
 
     //region 季節設定
@@ -323,7 +323,7 @@ class CustomDialog : DialogFragment(),
         //ビットマップを取得する
         val bitmap = (imageViewSelectedColor?.drawable as BitmapDrawable).bitmap
 
-        val rgb: Triple<Int, Int, Int> = Utility.getRGBFromBitmap(bitmap, 0, 0)
+        val rgb: RGB = Utility.getRGBFromBitmap(bitmap, 0, 0)
         //メインアクテビティへ選択結果を返却
         dialogResultListener?.onDialogResult(targetImageView, rgb)
 
@@ -411,9 +411,9 @@ class CustomDialog : DialogFragment(),
         //ImageViewからRGBを取得
         val rGB = Utility.getRGBFromImageView((imageView))
 
-        initRedColor = rGB.component1()
-        initGreenColor = rGB.component2()
-        initBlueColor = rGB.component3()
+        initRedColor = rGB.red
+        initGreenColor = rGB.green
+        initBlueColor = rGB.blue
 
         //イメージビューに色を反映
         imageViewSelectedColor?.setImageBitmap(
@@ -706,9 +706,9 @@ class CustomDialog : DialogFragment(),
             element?.setImageBitmap(
                 Utility.createBitmap(
                     element,
-                    palette.component1(),
-                    palette.component2(),
-                    palette.component3()
+                    palette.red,
+                    palette.green,
+                    palette.blue
                 )
             )
         }
