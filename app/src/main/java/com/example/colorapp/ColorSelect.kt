@@ -275,8 +275,8 @@ class ColorSelect {
      * 最適な色のリストを返却
      */
     fun getColorList(
-        season: Utility.Season,
-        item: Utility.Item,
+        season: Season,
+        item: Item,
         otherRGBList: MutableList<Triple<Int, Int, Int>>,
         sortFlg: Boolean
     ): MutableList<Int> {
