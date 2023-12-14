@@ -27,6 +27,7 @@ class SplashActivity : AppCompatActivity() {
         //レイアウトの設定
         setContentView(R.layout.activity_splash)
 
+
         // スプラッシュ画面が表示された後にメインアクティビティに遷移する
         MainScope().launch {
             delay(splashTimeOut)
@@ -37,3 +38,5 @@ class SplashActivity : AppCompatActivity() {
     }
     //endregion
 }
+
+

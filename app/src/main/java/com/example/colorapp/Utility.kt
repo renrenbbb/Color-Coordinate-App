@@ -53,7 +53,6 @@ enum class MsgLevel {
  */
 class Utility {
 
-
     //region 静的メンバー
     companion object {
         fun createBitmap(imageView: ImageView?, red: Int, green: Int, blue: Int): Bitmap {

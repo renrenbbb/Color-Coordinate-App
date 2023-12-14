@@ -446,15 +446,17 @@ class CustomDialog : DialogFragment(),
                 var colorIntList = mutableListOf<Int>()
 
                 //タッチした場所とその周りの色を取得
-                colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt() - 1))
-                colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt()))
-                colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt() + 1))
-                colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt() - 1))
-                colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt()))
-                colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt() + 1))
-                colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt() - 1))
-                colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt()))
-                colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt() + 1))
+                if (bitmap != null) {
+                    colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt() - 1))
+                    colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt()))
+                    colorIntList.add(bitmap.getPixel(x.toInt(), y.toInt() + 1))
+                    colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt() - 1))
+                    colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt()))
+                    colorIntList.add(bitmap.getPixel(x.toInt() - 1, y.toInt() + 1))
+                    colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt() - 1))
+                    colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt()))
+                    colorIntList.add(bitmap.getPixel(x.toInt() + 1, y.toInt() + 1))
+                }
 
                 var touchRedColorList = mutableSetOf<Int>()
                 var touchGreenColorList = mutableSetOf<Int>()
@@ -738,21 +740,21 @@ class CustomDialog : DialogFragment(),
     //endregion
 
     //region TextureView関連
-    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+    override fun onSurfaceTextureAvailable(p0: SurfaceTexture, p1: Int, p2: Int) {
         //カメラのセットアップ
         setupCamera()
         //カメラ起動
         openCamera()
     }
 
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+    override fun onSurfaceTextureSizeChanged(p0: SurfaceTexture, p1: Int, p2: Int) {
+    }
+
+    override fun onSurfaceTextureDestroyed(p0: SurfaceTexture): Boolean {
         return true
     }
 
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-    }
-
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+    override fun onSurfaceTextureUpdated(p0: SurfaceTexture) {
     }
 
     private fun setupCamera() {
