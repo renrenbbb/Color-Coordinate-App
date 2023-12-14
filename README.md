@@ -7,7 +7,7 @@
 ## 環境
 - Android Studio Giraffe | 2022.3.1
 - minSdkVersion = 23
-- targetSdkVersion = 28
+- targetSdkVersion = 31
 
 ## 使い方
 
