@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(),
         setControl()
 
         //カルーセル設定
-        setCarousel(true)
+        setCarousel(CarouselStatus.Initial)
 
         // カメラの権限が許可されていない場合はユーザーに許可を求める
         if (!Utility.isCameraPermissionGranted(this)) {
@@ -131,9 +131,9 @@ class MainActivity : AppCompatActivity(),
     /**
      * 検索ボタン押下時
      */
-    private fun buttonSearchClick(): Unit {
+    private fun buttonSearchClick() {
         //カルーセル設定
-        val result = setCarousel()
+        val result = setCarousel(CarouselStatus.ElseState)
 
         //ドロワーを閉じる
         if (result) drawerLayoutMain?.closeDrawer(Gravity.RIGHT)
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(),
     /**
      * 閉じるボタン押下時
      */
-    private fun buttonCloseClick(): Unit {
+    private fun buttonCloseClick() {
         //ドロワーを閉じる
         drawerLayoutMain?.closeDrawer(Gravity.RIGHT)
     }
@@ -208,10 +208,10 @@ class MainActivity : AppCompatActivity(),
     /**
      * カルーセル設定
      */
-    private fun setCarousel(initFlg: Boolean = false): Boolean {
+    private fun setCarousel(carouselStatus: CarouselStatus): Boolean {
         val cardRowDataList: MutableList<CardRowData> = mutableListOf()
 
-        if (initFlg) {
+        if (carouselStatus == CarouselStatus.Initial) {
             //▼初期状態
             val cardRowData = CardRowData()
             cardRowData.backgroundColor = getColor(R.color.white)
@@ -305,7 +305,7 @@ class MainActivity : AppCompatActivity(),
         }
 
         //提案した色をカードビューに表示
-        viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDataList, this, initFlg)
+        viewPager2SampleColor?.adapter = CardSlideAdapter(cardRowDataList, this, carouselStatus)
 
         //メッセージを初期化しておく
         displayMessage(null, MsgLevel.INFORMATION)

@@ -55,6 +55,28 @@ enum class MsgLevel {
 }
 
 /**
+ * カードスライダービューの状態
+ */
+enum class CarouselStatus {
+    //初期状態
+    Initial,
+
+    //それ以外
+    ElseState
+}
+
+/**
+ * 符号
+ */
+enum class Sign {
+    //プラス
+    Plus,
+
+    //マイナス
+    Minus
+}
+
+/**
  * 共通
  */
 class Utility {
