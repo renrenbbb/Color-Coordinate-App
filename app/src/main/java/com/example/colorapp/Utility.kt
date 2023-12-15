@@ -1,5 +1,8 @@
 package com.example.colorapp
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +10,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 /**
  * 他のクラスから呼び出し可能な関数群
@@ -53,8 +59,14 @@ enum class MsgLevel {
  */
 class Utility {
 
+
     //region 静的メンバー
     companion object {
+
+        //region 定数・変数
+        val CAMERA_PERMISSION_REQUEST = 1001
+        //endregion
+
         fun createBitmap(imageView: ImageView?, red: Int, green: Int, blue: Int): Bitmap {
             val bitmap = Bitmap.createBitmap(
                 imageView?.width ?: 0,
@@ -129,6 +141,38 @@ class Utility {
                 return RGB(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
             }
         }
+
+        /**
+         * トーストを表示する
+         */
+        fun showToast(message: String, context: Activity) {
+            context.let {
+                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /**
+         * カメラの権限を確認する
+         */
+        //region 権限関連
+        fun isCameraPermissionGranted(context: Activity): Boolean {
+            return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
+        /**
+         * カメラの権限をリクエストする
+         */
+        fun requestCameraPermission(context: Activity) {
+            ActivityCompat.requestPermissions(
+                context,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_REQUEST
+            )
+        }
+        //endregion
     }
     //endregion
 }

@@ -1,5 +1,6 @@
 package com.example.colorapp
 
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -48,9 +49,6 @@ class MainActivity : AppCompatActivity(),
     private var drawerLayoutMain: DrawerLayout? = null
     //endregion
 
-    //region 定数・変数
-    //endregion
-
     //region ロード処理
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +58,17 @@ class MainActivity : AppCompatActivity(),
 
         //レイアウトの設定
         setContentView(R.layout.activity_main)
+
         //コントロールの設定
         setControl()
+
         //カルーセル設定
         setCarousel(true)
+
+        // カメラの権限が許可されていない場合はユーザーに許可を求める
+        if (!Utility.isCameraPermissionGranted(this)) {
+            Utility.requestCameraPermission(this)
+        }
     }
 
     /**
@@ -360,6 +365,24 @@ class MainActivity : AppCompatActivity(),
                 rgb.blue
             )
         )
+    }
+    //endregion
+
+    //region onRequestPermissionsResult
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == Utility.CAMERA_PERMISSION_REQUEST) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //カメラの権限を許可した場合
+            } else {
+                //カメラの権限を拒否した場合
+            }
+        }
     }
     //endregion
 }

@@ -1,6 +1,7 @@
 package com.example.colorapp
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Context.CAMERA_SERVICE
@@ -741,6 +742,15 @@ class CustomDialog : DialogFragment(),
 
     //region TextureView関連
     override fun onSurfaceTextureAvailable(p0: SurfaceTexture, p1: Int, p2: Int) {
+        // カメラの権限が許可されていない場合はトースト表示する
+        if (!Utility.isCameraPermissionGranted(parentContext as Activity)) {
+            Utility.showToast(
+                (parentContext as Activity).resources.getString(R.string.camera_permission),
+                parentContext as Activity
+            )
+            return
+        }
+
         //カメラのセットアップ
         setupCamera()
         //カメラ起動
