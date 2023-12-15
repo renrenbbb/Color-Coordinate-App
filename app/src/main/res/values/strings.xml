@@ -22,4 +22,5 @@
     <string name="explanation_sidebar">サイドバーを開いて色を検索</string>
     <string name="error_selectedcolor">色が未選択のアイテムがあります</string>
     <string name="loading">loading...</string>
+    <string name="camera_permission">カメラを使用するために権限が必要です\n設定から許可してください</string>
 </resources>
