@@ -1,7 +1,6 @@
 package com.example.colorapp
 
 import android.content.Context
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * リスト設定
@@ -25,15 +28,6 @@ class CardViewHolder : RecyclerView.ViewHolder,
     View.OnClickListener {
 
     //region 定数・変数
-    //非表示用Runnable
-    private val hideControlRunnable = Runnable {
-        linearLayoutSub1?.visibility = View.INVISIBLE
-        linearLayoutSub2?.visibility = View.INVISIBLE
-
-        imageViewHand?.clearAnimation()
-    }
-
-    private val handler = Handler()
     private var context: Context
     //endregion
 
@@ -49,7 +43,11 @@ class CardViewHolder : RecyclerView.ViewHolder,
     //endregion
 
     //region コンストラクタ
-    constructor(itemView: View, context: Context, initFlg: Boolean) : super(itemView) {
+    constructor(
+        itemView: View,
+        context: Context,
+        carouselStatus: CarouselStatus
+    ) : super(itemView) {
         this.context = context
 
         this.linearLayoutSub1 = itemView.findViewById(R.id.linearLayoutSub1)
@@ -65,7 +63,7 @@ class CardViewHolder : RecyclerView.ViewHolder,
         linearLayoutSub1?.setBackgroundColor(ContextCompat.getColor(context, R.color.black))
         linearLayoutSub1?.alpha = 0.25f
 
-        if (initFlg) {
+        if (carouselStatus == CarouselStatus.Initial) {
             //▼初期画面の場合
 
             textViewExplanation?.setText(R.string.explanation_sidebar)
@@ -135,8 +133,18 @@ class CardViewHolder : RecyclerView.ViewHolder,
             //アニメーションを設定
             imageViewHand?.startAnimation(Utility.createAnimation(200f))
 
+            // CoroutineScopeを作成
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+
             // 5秒後に非表示にする
-            handler.postDelayed(hideControlRunnable, 5000)
+            coroutineScope.launch {
+                delay(5000) // 5秒待機
+
+                linearLayoutSub1?.visibility = View.INVISIBLE
+                linearLayoutSub2?.visibility = View.INVISIBLE
+
+                imageViewHand?.clearAnimation()
+            }
         }
     }
     //endregion
@@ -150,21 +158,21 @@ class CardSlideAdapter : RecyclerView.Adapter<CardViewHolder> {
     //region 定数・変数
     private var list: MutableList<CardRowData>
     private var context: Context
-    private var initFlg: Boolean
+    private var carouselStatus: CarouselStatus
     //endregion
 
     //region コンストラクタ
-    constructor(list: MutableList<CardRowData>, context: Context?, initFlg: Boolean) {
+    constructor(list: MutableList<CardRowData>, context: Context?, carouselStatus: CarouselStatus) {
         this.list = list
         this.context = context as Context
-        this.initFlg = initFlg
+        this.carouselStatus = carouselStatus
     }
     //endregion
 
     override fun onCreateViewHolder(vh: ViewGroup, p1: Int): CardViewHolder {
         val inflate: View =
             LayoutInflater.from(vh.context).inflate(R.layout.colorcardview, vh, false)
-        return CardViewHolder(inflate, context, initFlg)
+        return CardViewHolder(inflate, context, carouselStatus)
     }
 
     override fun onBindViewHolder(vh: CardViewHolder, p1: Int) {

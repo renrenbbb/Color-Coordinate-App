@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Context.CAMERA_SERVICE
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -18,8 +19,6 @@ import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CameraMetadata
 import android.hardware.camera2.CaptureRequest
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.MotionEvent
 import android.view.Surface
 import android.view.TextureView
@@ -32,6 +31,12 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /**
  * カラーピッカーダイアログ
@@ -60,10 +65,12 @@ class CustomDialog : DialogFragment(),
     private var camera: CameraDevice? = null
     private lateinit var cameraCaptureSession: CameraCaptureSession
     private lateinit var captureRequestBuilder: CaptureRequest.Builder
-    private val handler = Handler(Looper.getMainLooper())
+    private var newCoroutineScope: CoroutineScope? = null
+
+    //    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var longPressing = false
     private var isButtonCamera1Visible = true
-    private val cameraBlinkHandler = Handler(Looper.getMainLooper())
+    private val coroutineScope_blink = CoroutineScope(Dispatchers.Main)
 
     //点滅間隔（ミリ秒）
     private val cameraBlinkTime: Long = 500
@@ -129,10 +136,17 @@ class CustomDialog : DialogFragment(),
     private lateinit var imageViewPaletteList: MutableList<ImageView?>
     //endregion
 
+    //region 静的メンバー
+    /**
+     * ダイアログリスナーの設定
+     */
     fun setDialogResultListener(listener: DialogResultListener) {
         dialogResultListener = listener
     }
 
+    /**
+     * ターゲットイメージビューの設定
+     */
     fun setTargetImageView(imageView: ImageView?) {
         targetImageView = imageView
         val rGB = Utility.getRGBFromImageView((targetImageView))
@@ -142,10 +156,13 @@ class CustomDialog : DialogFragment(),
         initBlueColor = rGB.blue
     }
 
-    //region 季節設定
+    /**
+     * 季節設定
+     */
     fun setSeason(season: Season) {
         this.season = season
     }
+    //endregion
 
     //region ロード処理
     override fun onAttach(context: Context) {
@@ -274,6 +291,17 @@ class CustomDialog : DialogFragment(),
         val vto = imageViewSelectedColor?.viewTreeObserver
         vto?.addOnGlobalLayoutListener(this)
     }
+
+    /**
+     * onDismiss
+     */
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        //CoroutineScopeをキャンセルする
+        coroutineScope_blink.cancel()
+    }
+    //endregion
 
     //region ボタン押下時イベント
     override fun onClick(v: View) {
@@ -498,21 +526,20 @@ class CustomDialog : DialogFragment(),
     //endregion
 
     //region ボタン長押しイベント
-
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (v?.id) {
             buttonLeftRed?.id,
             buttonLeftGreen?.id,
             buttonLeftBlue?.id -> {
                 //左ボタン押下時
-                buttonLeftLongClick((v as View).id, event as MotionEvent)
+                buttonRightLeftLongClick((v as View).id, event as MotionEvent, Sign.Minus)
             }
 
             buttonRightRed?.id,
             buttonRightGreen?.id,
             buttonRightBlue?.id -> {
                 //右ボタン押下時
-                buttonRightLongClick((v as View).id, event as MotionEvent)
+                buttonRightLeftLongClick((v as View).id, event as MotionEvent, Sign.Plus)
             }
         }
 
@@ -520,110 +547,77 @@ class CustomDialog : DialogFragment(),
     }
 
     /**
-     * 左ボタン長押し時
+     * 右ボタン左ボタン長押し時
      */
-    fun buttonLeftLongClick(id: Int, event: MotionEvent) {
-        when (event?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                // 長押しが開始されたときの処理
-                longPressing = true
+    private fun buttonRightLeftLongClick(id: Int, event: MotionEvent, sign: Sign) {
+        // 新しいCoroutineScopeを作成
+        newCoroutineScope = CoroutineScope(Dispatchers.Main)
 
-                handler.postDelayed(object : Runnable {
-                    override fun run() {
-                        when (id) {
-                            buttonLeftRed?.id -> {
-                                (seekBarRed as SeekBar).progress -= 1
-                                textViewValueRed?.text = seekBarRed?.progress.toString()
-                            }
+        newCoroutineScope?.launch {
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // 長押しが開始されたときの処理
+                    longPressing = true
 
-                            buttonLeftGreen?.id -> {
-                                (seekBarGreen as SeekBar).progress -= 1
-                                textViewValueGreen?.text = seekBarGreen?.progress.toString()
-                            }
+                    while (isActive && longPressing) {
+                        // 50ミリ秒待機
+                        delay(50)
 
-                            buttonLeftBlue?.id -> {
-                                (seekBarBlue as SeekBar).progress -= 1
-                                textViewValueBlue?.text = seekBarBlue?.progress.toString()
-                            }
-                        }
-
-                        //イメージビューに色を反映
-                        imageViewSelectedColor?.setImageBitmap(
-                            Utility.createBitmap(
-                                imageViewSelectedColor,
-                                seekBarRed?.progress ?: 0,
-                                seekBarGreen?.progress ?: 0,
-                                seekBarBlue?.progress ?: 0
-                            )
-                        )
-
-                        // 再帰呼び出し
-                        buttonLeftLongClick(id, event)
+                        //色シークバーの増減
+                        increaseDecreaseSeekBar(id, sign)
                     }
-                }, 50)
-            }
+                }
 
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                // 長押しが解除されたときの処理
-                longPressing = false
-                // タイマーを停止
-                handler.removeCallbacksAndMessages(null)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // 長押しが解除されたときの処理
+                    longPressing = false
+                    // CoroutineScopeをキャンセル
+                    newCoroutineScope?.cancel()
+                }
             }
         }
     }
 
     /**
-     * 右ボタン長押し時
+     * 色シークバーの増減
      */
-    fun buttonRightLongClick(id: Int, event: MotionEvent) {
-        when (event?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                // 長押しが開始されたときの処理
-                longPressing = true
+    private fun increaseDecreaseSeekBar(id: Int, sign: Sign) {
+        //引数によって増減を変更
+        val amount = if (sign == Sign.Plus) {
+            1
+        } else {
+            -1
+        }
 
-                handler.postDelayed(object : Runnable {
-                    override fun run() {
-                        when (id) {
-                            buttonRightRed?.id -> {
-                                (seekBarRed as SeekBar).progress += 1
-                                textViewValueRed?.text = seekBarRed?.progress.toString()
-                            }
-
-                            buttonRightGreen?.id -> {
-                                (seekBarGreen as SeekBar).progress += 1
-                                textViewValueGreen?.text = seekBarGreen?.progress.toString()
-                            }
-
-                            buttonRightBlue?.id -> {
-                                (seekBarBlue as SeekBar).progress += 1
-                                textViewValueBlue?.text = seekBarBlue?.progress.toString()
-                            }
-                        }
-
-                        //イメージビューに色を反映
-                        imageViewSelectedColor?.setImageBitmap(
-                            Utility.createBitmap(
-                                imageViewSelectedColor,
-                                seekBarRed?.progress ?: 0,
-                                seekBarGreen?.progress ?: 0,
-                                seekBarBlue?.progress ?: 0
-                            )
-                        )
-
-                        // 再帰呼び出し
-                        buttonRightLongClick(id, event)
-                    }
-                }, 50)
-
+        when (id) {
+            buttonRightRed?.id,
+            buttonLeftRed?.id -> {
+                (seekBarRed as SeekBar).progress += amount
+                textViewValueRed?.text = seekBarRed?.progress.toString()
             }
 
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                // 長押しが解除されたときの処理
-                longPressing = false
-                // タイマーを停止
-                handler.removeCallbacksAndMessages(null)
+            buttonRightGreen?.id,
+            buttonLeftGreen?.id -> {
+                (seekBarGreen as SeekBar).progress += amount
+                textViewValueGreen?.text = seekBarGreen?.progress.toString()
+            }
+
+            buttonRightBlue?.id,
+            buttonLeftBlue?.id -> {
+                (seekBarBlue as SeekBar).progress += amount
+                textViewValueBlue?.text = seekBarBlue?.progress.toString()
             }
         }
+
+        // イメージビューに色を反映
+        imageViewSelectedColor?.setImageBitmap(
+            Utility.createBitmap(
+                imageViewSelectedColor,
+                seekBarRed?.progress ?: 0,
+                seekBarGreen?.progress ?: 0,
+                seekBarBlue?.progress ?: 0
+            )
+        )
     }
     //endregion
 
@@ -702,7 +696,7 @@ class CustomDialog : DialogFragment(),
     /**
      * カラーパレット設定
      */
-    private fun setColorPalette(): Unit {
+    private fun setColorPalette() {
         //カラーパレットへサンプルカラーを設定
         imageViewPaletteList.forEachIndexed { index: Int, element: ImageView? ->
             val palette = Utility.getColorCodeToRGB(sampleColorList[index])
@@ -721,8 +715,8 @@ class CustomDialog : DialogFragment(),
      * カメラボタン点滅開始
      */
     private fun startButtonCameraBlinking() {
-        handler.post(object : Runnable {
-            override fun run() {
+        coroutineScope_blink.launch {
+            while (isActive) {
                 if (isButtonCamera1Visible) {
                     buttonCamera1?.visibility = Button.INVISIBLE
                     buttonCamera2?.visibility = Button.VISIBLE
@@ -734,9 +728,9 @@ class CustomDialog : DialogFragment(),
                 isButtonCamera1Visible = !isButtonCamera1Visible
 
                 // 次の点滅を予約
-                cameraBlinkHandler.postDelayed(this, cameraBlinkTime)
+                delay(cameraBlinkTime)
             }
-        })
+        }
     }
     //endregion
 
