@@ -77,6 +77,32 @@ enum class Sign {
 }
 
 /**
+ * 季節
+ */
+enum class OpenWeatherMainField {
+    //晴れ
+    Clear,
+
+    //曇り
+    Clouds,
+
+    //雨
+    Rain,
+
+    //小雨
+    Drizzle,
+
+    //雷雨
+    Thunderstorm,
+
+    //雪
+    Snow,
+
+    //その他
+    Other
+}
+
+/**
  * 共通
  */
 class Utility {
@@ -100,6 +126,46 @@ class Utility {
             canvas.drawColor(color)
 
             return bitmap
+        }
+
+        /**
+         * 天気の名称を取得
+         */
+        fun getWeatherName(weather: String, context: Activity): String {
+            var result = context.resources.getString(R.string.other)
+
+            when (weather) {
+                OpenWeatherMainField.Clear.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_clear)
+                }
+
+                OpenWeatherMainField.Clouds.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_clouds)
+                }
+
+                OpenWeatherMainField.Rain.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_rain)
+                }
+
+                OpenWeatherMainField.Drizzle.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_drizzle)
+                }
+
+                OpenWeatherMainField.Thunderstorm.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_thunderstorm)
+                }
+
+                OpenWeatherMainField.Snow.name -> {
+                    //画面押下時
+                    result = context.resources.getString(R.string.weather_snow)
+                }
+            }
+            return result
         }
 
         /**

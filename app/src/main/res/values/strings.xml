@@ -1,4 +1,5 @@
 <resources>
+    <!-- 単語 -->
     <string name="app_name">ｶﾗｰｺｰﾃﾞｨﾈｰﾄ</string>
     <string name="search">検索</string>
     <string name="target">ターゲット</string>
@@ -18,6 +19,16 @@
     <string name="green">G</string>
     <string name="blue">B</string>
     <string name="ok">OK</string>
+    <string name="weather_clear">晴れ</string>
+    <string name="weather_clouds">曇り</string>
+    <string name="weather_rain">雨</string>
+    <string name="weather_drizzle">小雨</string>
+    <string name="weather_thunderstorm">雷雨</string>
+    <string name="weather_snow">雪</string>
+    <string name="other">その他</string>
+    <string name="tokyo">東京</string>
+
+    <!-- メッセージ -->
     <string name="explanation_color">スライドして次の色を表示</string>
     <string name="explanation_sidebar">サイドバーを開いて色を検索</string>
     <string name="error_selectedcolor">色が未選択のアイテムがあります</string>
