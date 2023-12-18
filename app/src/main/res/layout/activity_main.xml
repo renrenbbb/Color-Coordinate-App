@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/drawerLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
-    <FrameLayout  android:id="@+id/frameLayoutMain"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
+
+    <FrameLayout
+            android:id="@+id/frameLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <RelativeLayout
                 android:id="@+id/relativeLayoutSub1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
             <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPager2SampleColor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"/>
+                    android:background="@color/white" />
         </RelativeLayout>
     </FrameLayout>
+
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationViewMain"
             android:layout_width="match_parent"
@@ -28,35 +32,41 @@
             android:orientation="vertical"
             android:background="@color/white"
             android:layout_gravity="end">
+
         <LinearLayout
                 android:id="@+id/linearLayoutSub1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
             <LinearLayout
                     android:id="@+id/linearLayoutSub3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="vertical"
                     android:layout_weight="6">
+
                 <RelativeLayout
                         android:id="@+id/relativeLayoutHeader"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1">
+
                     <Button
                             android:id="@+id/buttonClose"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_marginStart="10dp"
                             android:layout_alignParentBottom="true"
-                            android:background="@drawable/custom_closebutton"/>
+                            android:background="@drawable/custom_closebutton" />
                 </RelativeLayout>
+
                 <RelativeLayout
                         android:id="@+id/relativeLayoutSub2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5">
+
                     <TextView
                             android:id="@+id/textViewSs"
                             android:layout_width="wrap_content"
@@ -65,7 +75,8 @@
                             android:layout_marginTop="20dp"
                             android:text="@string/ss"
                             android:textColor="@color/textthemecolor"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
+
                     <Switch
                             android:id="@+id/switchSeason"
                             android:layout_width="wrap_content"
@@ -75,7 +86,8 @@
                             android:thumb="@drawable/custom_thumb"
                             android:track="@drawable/custom_track"
                             android:layout_marginStart="5dp"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
+
                     <TextView
                             android:id="@+id/textViewAw"
                             android:layout_width="wrap_content"
@@ -85,7 +97,8 @@
                             android:layout_marginStart="5dp"
                             android:text="@string/aw"
                             android:textColor="@color/textthemecolor"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
+
                     <TextView
                             android:id="@+id/textViewTargetItem"
                             android:layout_width="wrap_content"
@@ -94,7 +107,8 @@
                             android:layout_below="@id/textViewSs"
                             android:layout_alignStart="@+id/textViewSs"
                             android:text="@string/target"
-                            android:textColor="@color/textthemecolor"/>
+                            android:textColor="@color/textthemecolor" />
+
                     <RadioGroup
                             android:id="@+id/radioGroupTargetItem"
                             android:layout_width="wrap_content"
@@ -102,19 +116,22 @@
                             android:layout_below="@id/textViewTargetItem"
                             android:layout_marginStart="5dp"
                             android:layout_alignStart="@id/textViewTargetItem">
+
                         <RadioButton
                                 android:id="@+id/radioButtonTargetTops"
                                 android:text="@string/tops"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:buttonTint="@color/colorAccent"
-                                android:checked="true"/>
+                                android:checked="true" />
+
                         <RadioButton
                                 android:id="@+id/radioButtonTargetBottoms"
                                 android:text="@string/bottoms"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:buttonTint="@color/colorAccent" />
+
                         <RadioButton
                                 android:id="@+id/radioButtonTargetShoes"
                                 android:text="@string/shoes"
@@ -122,6 +139,7 @@
                                 android:layout_height="wrap_content"
                                 android:buttonTint="@color/colorAccent" />
                     </RadioGroup>
+
                     <TextView
                             android:id="@+id/textViewOtherItem"
                             android:layout_width="wrap_content"
@@ -131,24 +149,28 @@
                             android:layout_below="@id/radioGroupTargetItem"
                             android:text="@string/other_item_color"
                             android:textColor="@color/textthemecolor"
-                            android:layout_alignStart="@id/textViewTargetItem"/>
+                            android:layout_alignStart="@id/textViewTargetItem" />
                 </RelativeLayout>
+
                 <LinearLayout
                         android:id="@+id/linearLayoutOtherItem"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="vertical"
                         android:layout_weight="6">
+
                     <LinearLayout
                             android:id="@+id/linearLayoutOtherItemTops"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1">
+
                         <RelativeLayout
                                 android:id="@+id/relativeLayoutTops"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
+
                             <ImageView
                                     android:id="@+id/imageViewTops"
                                     android:layout_width="wrap_content"
@@ -156,9 +178,9 @@
                                     android:layout_centerVertical="true"
                                     android:layout_centerHorizontal="true"
                                     android:src="@drawable/tops"
-                                    android:scaleType="centerInside"
-                            />
+                                    android:scaleType="centerInside" />
                         </RelativeLayout>
+
                         <TextView
                                 android:id="@+id/textViewOtherItemTops"
                                 android:layout_width="0dp"
@@ -166,7 +188,8 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="@string/tops"
-                                android:textColor="@color/textthemecolor"/>
+                                android:textColor="@color/textthemecolor" />
+
                         <androidx.cardview.widget.CardView
                                 android:id="@+id/cardViewTops"
                                 android:layout_width="0dp"
@@ -178,38 +201,43 @@
                                 android:layout_marginBottom="3dp"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
+
                             <ImageView
                                     android:id="@+id/imageViewTopsColor"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/init_imageview_backcolor"/>
+                                    android:background="@drawable/init_imageview_backcolor" />
                         </androidx.cardview.widget.CardView>
+
                         <Space
                                 android:id="@+id/spaceTops"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1" />
                     </LinearLayout>
+
                     <LinearLayout
                             android:id="@+id/linearLayoutOtherItemBottoms"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1">
+
                         <RelativeLayout
                                 android:id="@+id/relativeLayoutBottoms"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
-                        <ImageView
-                                android:id="@+id/imageViewBottoms"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_centerHorizontal="true"
-                                android:src="@drawable/bottoms"
-                                android:scaleType="centerInside"
-                        />
+
+                            <ImageView
+                                    android:id="@+id/imageViewBottoms"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:src="@drawable/bottoms"
+                                    android:scaleType="centerInside" />
                         </RelativeLayout>
+
                         <TextView
                                 android:id="@+id/textViewOtherItemBottoms"
                                 android:layout_width="0dp"
@@ -217,7 +245,8 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="@string/bottoms"
-                                android:textColor="@color/textthemecolor"/>
+                                android:textColor="@color/textthemecolor" />
+
                         <androidx.cardview.widget.CardView
                                 android:id="@+id/cardViewBottoms"
                                 android:layout_width="0dp"
@@ -229,28 +258,33 @@
                                 android:layout_marginBottom="3dp"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
+
                             <ImageView
                                     android:id="@+id/imageViewBottomsColor"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/init_imageview_backcolor"/>
+                                    android:background="@drawable/init_imageview_backcolor" />
                         </androidx.cardview.widget.CardView>
+
                         <Space
                                 android:id="@+id/spaceBottoms"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1" />
                     </LinearLayout>
+
                     <LinearLayout
                             android:id="@+id/linearLayoutOtherItemShoes"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1">
+
                         <RelativeLayout
                                 android:id="@+id/relativeLayoutShoes"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
+
                             <ImageView
                                     android:id="@+id/imageViewShoes"
                                     android:layout_width="wrap_content"
@@ -258,9 +292,9 @@
                                     android:layout_centerVertical="true"
                                     android:layout_centerHorizontal="true"
                                     android:src="@drawable/shoes"
-                                    android:scaleType="centerInside"
-                            />
+                                    android:scaleType="centerInside" />
                         </RelativeLayout>
+
                         <TextView
                                 android:id="@+id/textViewOtherItemShoes"
                                 android:layout_width="0dp"
@@ -268,7 +302,8 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="@string/shoes"
-                                android:textColor="@color/textthemecolor"/>
+                                android:textColor="@color/textthemecolor" />
+
                         <androidx.cardview.widget.CardView
                                 android:id="@+id/cardViewShoes"
                                 android:layout_width="0dp"
@@ -280,25 +315,29 @@
                                 android:layout_marginBottom="3dp"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
+
                             <ImageView
                                     android:id="@+id/imageViewShoesColor"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/init_imageview_backcolor"/>
+                                    android:background="@drawable/init_imageview_backcolor" />
                         </androidx.cardview.widget.CardView>
+
                         <Space
                                 android:id="@+id/spaceShoes"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                         android:id="@+id/linearLayoutSort"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="vertical"
                         android:layout_weight="1">
+
                     <CheckBox
                             android:id="@+id/checkBoxSort"
                             android:layout_width="wrap_content"
@@ -307,37 +346,64 @@
                             android:layout_marginTop="10dp"
                             android:text="@string/color_sort"
                             android:textColor="@color/textthemecolor"
-                            android:checked="true"
-                    />
+                            android:checked="true" />
                 </LinearLayout>
+
                 <RelativeLayout
                         android:id="@+id/relativeLayoutMessage"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="vertical"
                         android:layout_weight="1">
+
                     <TextView
                             android:id="@+id/textViewMessage"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"/>
+                            android:layout_height="wrap_content"
+                            android:gravity="center" />
+
+                    <TextView
+                            android:id="@+id/textViewCity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tokyo"
+                            android:layout_below="@id/textViewMessage"
+                            android:layout_marginStart="5dp" />
+
+                    <TextView
+                            android:id="@+id/textViewWeather"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/textViewCity"
+                            android:layout_alignBottom="@+id/textViewCity"
+                            android:layout_marginStart="5dp" />
+
+                    <TextView
+                            android:id="@+id/textViewTemperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/textViewWeather"
+                            android:layout_alignBottom="@+id/textViewWeather"
+                            android:layout_marginStart="5dp" />
                 </RelativeLayout>
             </LinearLayout>
+
             <RelativeLayout
                     android:id="@+id/relativeLayoutSub3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1">
-            <Button
-                    android:id="@+id/buttonSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/spcontrolthemecolor"
-                    android:textColor="@color/white"
-                    android:text="@string/search"
-                    android:textSize="20sp"/>
+
+                <Button
+                        android:id="@+id/buttonSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:background="@color/spcontrolthemecolor"
+                        android:textColor="@color/white"
+                        android:text="@string/search"
+                        android:textSize="20sp" />
             </RelativeLayout>
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>

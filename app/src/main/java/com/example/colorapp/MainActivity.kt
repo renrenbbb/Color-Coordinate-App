@@ -21,6 +21,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * メインアクテビティ
@@ -31,8 +39,15 @@ class MainActivity : AppCompatActivity(),
     CustomDialog.DialogResultListener,
     CompoundButton.OnCheckedChangeListener {
 
+    //region 定数・変数
+    val OPENWEATHER_API_KEY = "ab82b9256de8d0929950c7fdccba71cf"
+    //endregion
+
     //region 画面項目
     private var textViewMessage: TextView? = null
+    private var textViewCity: TextView? = null
+    private var textViewWeather: TextView? = null
+    private var textViewTemperature: TextView? = null
     private var buttonSearch: Button? = null
     private var buttonClose: Button? = null
     private var radioButtonTargetTops: RadioButton? = null
@@ -69,6 +84,23 @@ class MainActivity : AppCompatActivity(),
         if (!Utility.isCameraPermissionGranted(this)) {
             Utility.requestCameraPermission(this)
         }
+
+        val city = "Tokyo"
+        val apiUrl =
+            "http://api.openweathermap.org/data/2.5/weather?q=$city&appid=$OPENWEATHER_API_KEY"
+
+        //非同期で天気を取得
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = getWeather(apiUrl)
+            if (response != null) {
+                val weatherInfo = parseWeather(response)
+                textViewCity?.text = resources.getString(R.string.tokyo)
+                textViewWeather?.text = weatherInfo.first
+                textViewTemperature?.text = weatherInfo.second.toString() + "°C"
+
+                println("Weather: ${weatherInfo.first}, Temperature: ${weatherInfo.second} °C")
+            }
+        }
     }
 
     /**
@@ -76,6 +108,9 @@ class MainActivity : AppCompatActivity(),
      */
     private fun setControl() {
         textViewMessage = findViewById<TextView>(R.id.textViewMessage)
+        textViewCity = findViewById<TextView>(R.id.textViewCity)
+        textViewWeather = findViewById<TextView>(R.id.textViewWeather)
+        textViewTemperature = findViewById<TextView>(R.id.textViewTemperature)
         buttonSearch = findViewById<Button>(R.id.buttonSearch)
         buttonClose = findViewById<Button>(R.id.buttonClose)
         radioButtonTargetTops = findViewById<RadioButton>(R.id.radioButtonTargetTops)
@@ -201,6 +236,58 @@ class MainActivity : AppCompatActivity(),
         } finally {
             v?.isEnabled = true
         }
+    }
+    //endregion
+
+    //region 天気取得処理
+    /**
+     * OpenWeatherから天気を取得
+     */
+    fun getWeather(apiUrl: String): String? {
+        val url = URL(apiUrl)
+        val connection = url.openConnection() as HttpURLConnection
+
+        connection.requestMethod = "GET"
+
+        try {
+            val responseCode = connection.responseCode
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val reader = BufferedReader(InputStreamReader(connection.inputStream))
+                var line: String?
+                val response = StringBuilder()
+
+                while (reader.readLine().also { line = it } != null) {
+                    response.append(line)
+                }
+                reader.close()
+
+                return response.toString()
+            } else {
+                return null
+            }
+        } catch (e: Exception) {
+            println(e.message)
+            return null
+        }
+    }
+
+    /**
+     * JSONから変換
+     */
+    private fun parseWeather(response: String): Pair<String, Int> {
+        val jsonObject = JSONObject(response)
+
+        val weatherArray = jsonObject.getJSONArray("weather")
+        val weatherObject = weatherArray.getJSONObject(0)
+        //天気の名称を取得
+        val weather = Utility.getWeatherName(weatherObject.getString("main"), this)
+
+        val mainObject = jsonObject.getJSONObject("main")
+        //気温は変換する
+        val temperature = Math.floor(mainObject.getDouble("temp") - 273.15).toInt()
+
+        return Pair(weather, temperature)
     }
     //endregion
 
