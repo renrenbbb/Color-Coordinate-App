@@ -113,6 +113,7 @@ class Utility {
 
         //region 定数・変数
         val CAMERA_PERMISSION_REQUEST = 1001
+        val LOCATION_PERMISSION_REQUEST_CODE = 1002
         //endregion
 
         fun createBitmap(imageView: ImageView?, red: Int, green: Int, blue: Int): Bitmap {
@@ -239,11 +240,11 @@ class Utility {
             }
         }
 
+        //region 権限関連
         /**
          * カメラの権限を確認する
          */
-        //region 権限関連
-        fun isCameraPermissionGranted(context: Activity): Boolean {
+        fun checkCameraPermission(context: Activity): Boolean {
             return ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.CAMERA
@@ -260,6 +261,28 @@ class Utility {
                 CAMERA_PERMISSION_REQUEST
             )
         }
+
+        /**
+         * 位置情報の権限を確認する
+         */
+        fun checkLocationPermission(context: Activity): Boolean {
+            return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
+        /**
+         * 位置情報の権限をリクエストする
+         */
+        fun requestLocationPermission(context: Activity) {
+            ActivityCompat.requestPermissions(
+                context,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+
         //endregion
     }
     //endregion
@@ -269,3 +292,8 @@ class Utility {
  * RGBクラス
  */
 data class RGB(val red: Int, val green: Int, val blue: Int)
+
+/**
+ * 位置情報クラス
+ */
+data class LocationInfo(val latitude: Double, val longitude: Double)

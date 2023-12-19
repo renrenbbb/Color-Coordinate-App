@@ -177,6 +177,7 @@ class CustomDialog : DialogFragment(),
 
         // カスタムしたレイアウトをわたす
         dialog.setContentView(R.layout.colorpickerdialog)
+
         //コントロールの設定
         setControl(dialog)
 
@@ -363,8 +364,13 @@ class CustomDialog : DialogFragment(),
      * カメラボタン押下時
      */
     private fun buttonCameraClick(): Unit {
-        //カメラのテクスチャビューを表示(裏で常に起動している)
-        textureViewCamera?.visibility = View.VISIBLE
+        // カメラの権限が許可されていない場合はトースト表示する
+        if (!Utility.checkCameraPermission(parentContext as Activity)) {
+            Utility.requestCameraPermission(parentContext as Activity)
+        } else {
+            //カメラのテクスチャビューを表示(裏で常に起動している)
+            textureViewCamera?.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -736,15 +742,6 @@ class CustomDialog : DialogFragment(),
 
     //region TextureView関連
     override fun onSurfaceTextureAvailable(p0: SurfaceTexture, p1: Int, p2: Int) {
-        // カメラの権限が許可されていない場合はトースト表示する
-        if (!Utility.isCameraPermissionGranted(parentContext as Activity)) {
-            Utility.showToast(
-                (parentContext as Activity).resources.getString(R.string.camera_permission),
-                parentContext as Activity
-            )
-            return
-        }
-
         //カメラのセットアップ
         setupCamera()
         //カメラ起動
