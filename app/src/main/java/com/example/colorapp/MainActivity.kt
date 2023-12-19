@@ -3,6 +3,7 @@ package com.example.colorapp
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
+import android.location.Location
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -20,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -40,7 +43,8 @@ class MainActivity : AppCompatActivity(),
     CompoundButton.OnCheckedChangeListener {
 
     //region 定数・変数
-    val OPENWEATHER_API_KEY = "ab82b9256de8d0929950c7fdccba71cf"
+    private val OPENWEATHER_API_KEY = "ab82b9256de8d0929950c7fdccba71cf"
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     //endregion
 
     //region 画面項目
@@ -66,40 +70,36 @@ class MainActivity : AppCompatActivity(),
 
     //region ロード処理
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        try {
+            super.onCreate(savedInstanceState)
 
-        //ナビゲーションバーの透過に必要
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            //ナビゲーションバーの透過に必要
+            window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        //レイアウトの設定
-        setContentView(R.layout.activity_main)
+            //レイアウトの設定
+            setContentView(R.layout.activity_main)
 
-        //コントロールの設定
-        setControl()
+            //コントロールの設定
+            setControl()
 
-        //カルーセル設定
-        setCarousel(CarouselStatus.Initial)
+            //カルーセル設定
+            setCarousel(CarouselStatus.Initial)
 
-        // カメラの権限が許可されていない場合はユーザーに許可を求める
-        if (!Utility.isCameraPermissionGranted(this)) {
-            Utility.requestCameraPermission(this)
-        }
+            // fusedLocationClient の初期化を追加
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val city = "Tokyo"
-        val apiUrl =
-            "http://api.openweathermap.org/data/2.5/weather?q=$city&appid=$OPENWEATHER_API_KEY"
+            // 位置情報の権限が許可されていない場合はユーザーに許可を求める
+            if (!Utility.checkLocationPermission(this)) {
+                Utility.requestLocationPermission(this)
+            } else {
+                //現在の位置情報を取得する
+                var locationInfo: LocationInfo? = requestLocation()
 
-        //非同期で天気を取得
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = getWeather(apiUrl)
-            if (response != null) {
-                val weatherInfo = parseWeather(response)
-                textViewCity?.text = resources.getString(R.string.tokyo)
-                textViewWeather?.text = weatherInfo.first
-                textViewTemperature?.text = weatherInfo.second.toString() + "°C"
-
-                println("Weather: ${weatherInfo.first}, Temperature: ${weatherInfo.second} °C")
+                //現在地から天気を取得する(現在は東京のみ)
+                getWeatherCurrentLocation()
             }
+        } catch (e: Exception) {
+            println(e.message)
         }
     }
 
@@ -438,6 +438,57 @@ class MainActivity : AppCompatActivity(),
         }
         textViewMessage?.setTextColor(ContextCompat.getColor(this, color))
     }
+
+    /**
+     * 現在の位置情報を取得する
+     */
+    private fun requestLocation(): LocationInfo? {
+        var locationInfo: LocationInfo? = null
+
+        //権限チェック済み
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+
+
+                location?.let {
+                    // 現在の位置情報を取得できた場合の処理
+                    locationInfo = LocationInfo(it.latitude, it.longitude)
+                } ?: run {
+                    // 現在の位置情報を取得できなかった場合の処理
+                    locationInfo = null
+                }
+            }
+
+        return locationInfo
+    }
+
+    /**
+     * 現在地から天気を取得する
+     */
+    private fun getWeatherCurrentLocation() {
+        val city = "Tokyo"
+        val apiUrl =
+            "http://api.openweathermap.org/data/2.5/weather?q=$city&appid=$OPENWEATHER_API_KEY"
+
+        //非同期で天気を取得
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response = getWeather(apiUrl)
+                if (response != null) {
+                    val weatherInfo = parseWeather(response)
+                    //UIへの変更はメインスレッドで行う
+                    runOnUiThread {
+                        if (weatherInfo.first != null) textViewCity?.text =
+                            resources.getString(R.string.tokyo)
+                        textViewWeather?.text = weatherInfo.first
+                        textViewTemperature?.text = weatherInfo.second.toString() + "°C"
+                    }
+                }
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+    }
     //endregion
 
     //region CustomDialog関連
@@ -463,11 +514,26 @@ class MainActivity : AppCompatActivity(),
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == Utility.CAMERA_PERMISSION_REQUEST) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //カメラの権限を許可した場合
-            } else {
-                //カメラの権限を拒否した場合
+        when (requestCode) {
+            Utility.CAMERA_PERMISSION_REQUEST -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //カメラの権限を許可した場合
+                } else {
+                    //カメラの権限を拒否した場合
+                }
+            }
+
+            Utility.LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //位置情報の権限を許可した場合
+                    //現在の位置情報を取得する
+                    var locationInfo: LocationInfo? = requestLocation()
+
+                    //現在地から天気を取得する(現在は東京のみ)
+                    getWeatherCurrentLocation()
+                } else {
+                    //位置情報の権限を拒否した場合
+                }
             }
         }
     }
