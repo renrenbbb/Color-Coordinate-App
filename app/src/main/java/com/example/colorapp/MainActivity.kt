@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity(),
     CompoundButton.OnCheckedChangeListener {
 
     //region 定数・変数
-    private val OPENWEATHER_API_KEY = "ab82b9256de8d0929950c7fdccba71cf"
+    //APIキーなしの場合は天気取得しない
+    private val OPENWEATHER_API_KEY = ""
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     //endregion
 
