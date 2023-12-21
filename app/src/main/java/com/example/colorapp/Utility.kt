@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.util.Properties
 
 /**
  * 他のクラスから呼び出し可能な関数群
@@ -100,6 +101,25 @@ enum class OpenWeatherMainField {
 
     //その他
     Other
+}
+
+/**
+ * コンフィグクラス
+ */
+object Config {
+    private val properties = Properties()
+
+    init {
+        val inputStream = Config::class.java.classLoader.getResourceAsStream("config.properties")
+        properties.load(inputStream)
+    }
+
+    /**
+     * OpenWeatherのAPIキーを取得
+     */
+    fun getOpenWeatherApiKey(): String {
+        return properties.getProperty("openweather.api.key")
+    }
 }
 
 /**
@@ -282,7 +302,6 @@ class Utility {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         }
-
         //endregion
     }
     //endregion
