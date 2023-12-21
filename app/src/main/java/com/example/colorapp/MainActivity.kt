@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),
 
     //region 定数・変数
     //APIキーなしの場合は天気取得しない
-    private val OPENWEATHER_API_KEY = ""
+    private val OPENWEATHER_API_KEY = Config.getOpenWeatherApiKey()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     //endregion
 
