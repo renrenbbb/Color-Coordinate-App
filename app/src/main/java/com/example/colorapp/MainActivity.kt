@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -27,11 +28,15 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * メインアクテビティ
@@ -46,6 +51,10 @@ class MainActivity : AppCompatActivity(),
     //APIキーなしの場合は天気取得しない
     private val OPENWEATHER_API_KEY = Config.getOpenWeatherApiKey()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    //東京都の緯度・経度
+    private val TOKYO_LATITUDE = 35.6895
+    private val TOKYO_LONGITUDE = 139.6917
     //endregion
 
     //region 画面項目
@@ -93,11 +102,12 @@ class MainActivity : AppCompatActivity(),
             if (!Utility.checkLocationPermission(this)) {
                 Utility.requestLocationPermission(this)
             } else {
-                //現在の位置情報を取得する
-                var locationInfo: LocationInfo? = requestLocation()
-
-                //現在地から天気を取得する(現在は東京のみ)
-                getWeatherCurrentLocation()
+                lifecycleScope.launch {
+                    //現在の位置情報を取得する
+                    val locationInfo = requestLocation()
+                    //現在位置から天気を取得する
+                    getWeatherCurrentLocation(locationInfo.latitude, locationInfo.longitude)
+                }
             }
         } catch (e: Exception) {
             println(e.message)
@@ -276,19 +286,20 @@ class MainActivity : AppCompatActivity(),
     /**
      * JSONから変換
      */
-    private fun parseWeather(response: String): Pair<String, Int> {
+    private fun parseWeather(response: String): WeatherInfo {
         val jsonObject = JSONObject(response)
 
         val weatherArray = jsonObject.getJSONArray("weather")
         val weatherObject = weatherArray.getJSONObject(0)
         //天気の名称を取得
-        val weather = Utility.getWeatherName(weatherObject.getString("main"), this)
+//        val weather = Utility.getWeatherName(weatherObject.getString("main"), this)
+        val weather = weatherObject.getString("main")
 
         val mainObject = jsonObject.getJSONObject("main")
         //気温は変換する
         val temperature = Math.floor(mainObject.getDouble("temp") - 273.15).toInt()
 
-        return Pair(weather, temperature)
+        return WeatherInfo(resources.getString(R.string.tokyo), weather, temperature)
     }
     //endregion
 
@@ -443,33 +454,36 @@ class MainActivity : AppCompatActivity(),
     /**
      * 現在の位置情報を取得する
      */
-    private fun requestLocation(): LocationInfo? {
-        var locationInfo: LocationInfo? = null
-
-        //権限チェック済み
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-
-
-                location?.let {
-                    // 現在の位置情報を取得できた場合の処理
-                    locationInfo = LocationInfo(it.latitude, it.longitude)
-                } ?: run {
-                    // 現在の位置情報を取得できなかった場合の処理
-                    locationInfo = null
-                }
+    suspend fun requestLocation(): LocationInfo = withContext(Dispatchers.Default) {
+        try {
+            suspendCancellableCoroutine { continuation ->
+                // 権限チェック済み
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            // 現在の位置情報を取得できた場合の処理
+                            continuation.resume(LocationInfo(it.latitude, it.longitude))
+                        } ?: run {
+                            // 現在の位置情報を取得できなかった場合の処理
+                            continuation.resume(LocationInfo(TOKYO_LATITUDE, TOKYO_LONGITUDE))
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        // エラーが発生した場合の処理
+                        continuation.resumeWithException(exception)
+                    }
             }
-
-        return locationInfo
+        } catch (e: Exception) {
+            LocationInfo(TOKYO_LATITUDE, TOKYO_LONGITUDE)
+        }
     }
 
     /**
-     * 現在地から天気を取得する
+     * 現在位置から天気を取得する
      */
-    private fun getWeatherCurrentLocation() {
-        val city = "Tokyo"
+    private fun getWeatherCurrentLocation(latitude: Double, longitude: Double) {
         val apiUrl =
-            "http://api.openweathermap.org/data/2.5/weather?q=$city&appid=$OPENWEATHER_API_KEY"
+            "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$OPENWEATHER_API_KEY"
 
         //非同期で天気を取得
         GlobalScope.launch(Dispatchers.IO) {
@@ -477,12 +491,15 @@ class MainActivity : AppCompatActivity(),
                 val response = getWeather(apiUrl)
                 if (response != null) {
                     val weatherInfo = parseWeather(response)
+
+                    //Google Maps APIを利用して座標から都道府県名を取得
+                    var cityName = Utility.getCityName(latitude, longitude, this@MainActivity)
+
                     //UIへの変更はメインスレッドで行う
                     runOnUiThread {
-                        if (weatherInfo.first != null) textViewCity?.text =
-                            resources.getString(R.string.tokyo)
-                        textViewWeather?.text = weatherInfo.first
-                        textViewTemperature?.text = weatherInfo.second.toString() + "°C"
+                        textViewCity?.text = cityName
+                        textViewWeather?.text = weatherInfo.weather
+                        textViewTemperature?.text = weatherInfo.temperature.toString() + "°C"
                     }
                 }
             } catch (e: Exception) {
@@ -527,11 +544,12 @@ class MainActivity : AppCompatActivity(),
             Utility.LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //位置情報の権限を許可した場合
-                    //現在の位置情報を取得する
-                    var locationInfo: LocationInfo? = requestLocation()
-
-                    //現在地から天気を取得する(現在は東京のみ)
-                    getWeatherCurrentLocation()
+                    lifecycleScope.launch {
+                        //現在の位置情報を取得する
+                        val locationInfo = requestLocation()
+                        //現在位置から天気を取得する
+                        getWeatherCurrentLocation(locationInfo.latitude, locationInfo.longitude)
+                    }
                 } else {
                     //位置情報の権限を拒否した場合
                 }

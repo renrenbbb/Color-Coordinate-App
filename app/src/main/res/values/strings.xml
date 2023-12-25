@@ -27,6 +27,7 @@
     <string name="weather_snow">雪</string>
     <string name="other">その他</string>
     <string name="tokyo">東京</string>
+    <string name="unknown">不明</string>
 
     <!-- メッセージ -->
     <string name="explanation_color">スライドして次の色を表示</string>
