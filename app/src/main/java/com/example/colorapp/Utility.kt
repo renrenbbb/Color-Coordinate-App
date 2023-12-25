@@ -13,6 +13,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.colorapp.Config.getGoogleMapsApiKey
+import org.json.JSONObject
+import java.net.URL
+import java.nio.charset.Charset
 import java.util.Properties
 
 /**
@@ -120,13 +124,19 @@ object Config {
     fun getOpenWeatherApiKey(): String {
         return properties.getProperty("openweather.api.key")
     }
+
+    /**
+     * GoogleMapsのAPIキーを取得
+     */
+    fun getGoogleMapsApiKey(): String {
+        return properties.getProperty("googlemaps.api.key")
+    }
 }
 
 /**
  * 共通
  */
 class Utility {
-
 
     //region 静的メンバー
     companion object {
@@ -303,6 +313,48 @@ class Utility {
             )
         }
         //endregion
+
+        /**
+         * Google Maps APIを利用して座標から都道府県名を取得
+         */
+        fun getCityName(latitude: Double, longitude: Double, context: Activity): String {
+            //APIキーを取得
+            val apiKey = getGoogleMapsApiKey()
+            val geocodingApiUrl =
+                "https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey"
+
+            try {
+                val response = URL(geocodingApiUrl).readText()
+                val jsonObject = JSONObject(response)
+
+                if (jsonObject.getString("status") == "OK") {
+                    val results = jsonObject.getJSONArray("results")
+                    if (results.length() > 0) {
+                        val addressComponents =
+                            results.getJSONObject(0).getJSONArray("address_components")
+                        for (i in 0 until addressComponents.length()) {
+                            val component = addressComponents.getJSONObject(i)
+                            val types = component.getJSONArray("types")
+                            if (types.toString().contains("administrative_area_level_1")) {
+                                // 都道府県名を返却
+                                return convertToShiftJIS(component.getString("long_name"))
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+
+            //失敗した場合は「不明」を返却
+            return context.resources.getString(R.string.unknown)
+        }
+
+        /**
+         * UTF-8からShift-JISに変換
+         */
+        private fun convertToShiftJIS(input: String): String {
+            return String(input.toByteArray(Charset.forName("UTF-8")), Charset.forName("Shift-JIS"))
+        }
     }
     //endregion
 }
@@ -316,3 +368,8 @@ data class RGB(val red: Int, val green: Int, val blue: Int)
  * 位置情報クラス
  */
 data class LocationInfo(val latitude: Double, val longitude: Double)
+
+/**
+ * 天気情報クラス
+ */
+data class WeatherInfo(val city: String, val weather: String, val temperature: Int)
