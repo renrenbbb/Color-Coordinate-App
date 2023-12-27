@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(),
     //東京都の緯度・経度
     private val TOKYO_LATITUDE = 35.6895
     private val TOKYO_LONGITUDE = 139.6917
+    private val KELVIN_TO_CELSIUS_OFFSET = 273.15
     //endregion
 
     //region 画面項目
@@ -292,14 +293,14 @@ class MainActivity : AppCompatActivity(),
         val weatherArray = jsonObject.getJSONArray("weather")
         val weatherObject = weatherArray.getJSONObject(0)
         //天気の名称を取得
-//        val weather = Utility.getWeatherName(weatherObject.getString("main"), this)
-        val weather = weatherObject.getString("main")
+        val weather = Utility.getWeatherName(weatherObject.getString("main"), this)
 
         val mainObject = jsonObject.getJSONObject("main")
         //気温は変換する
-        val temperature = Math.floor(mainObject.getDouble("temp") - 273.15).toInt()
+        val temperature =
+            Math.floor(mainObject.getDouble("temp") - KELVIN_TO_CELSIUS_OFFSET).toInt()
 
-        return WeatherInfo(resources.getString(R.string.tokyo), weather, temperature)
+        return WeatherInfo(weather, temperature)
     }
     //endregion
 

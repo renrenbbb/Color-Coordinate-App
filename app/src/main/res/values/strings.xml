@@ -26,8 +26,56 @@
     <string name="weather_thunderstorm">雷雨</string>
     <string name="weather_snow">雪</string>
     <string name="other">その他</string>
-    <string name="tokyo">東京</string>
     <string name="unknown">不明</string>
+
+    <!-- 都道府県 -->
+    <string name="hokkaido">北海道</string>
+    <string name="aomori">青森</string>
+    <string name="iwate">岩手</string>
+    <string name="miyagi">宮城</string>
+    <string name="akita">秋田</string>
+    <string name="yamagata">山形</string>
+    <string name="fukushima">福島</string>
+    <string name="ibaraki">茨城</string>
+    <string name="tochigi">栃木</string>
+    <string name="gunma">群馬</string>
+    <string name="saitama">埼玉</string>
+    <string name="chiba">千葉</string>
+    <string name="tokyo">東京</string>
+    <string name="kanagawa">神奈川</string>
+    <string name="niigata">新潟</string>
+    <string name="toyama">富山</string>
+    <string name="ishikawa">石川</string>
+    <string name="fukui">福井</string>
+    <string name="yamanashi">山梨</string>
+    <string name="nagano">長野</string>
+    <string name="gifu">岐阜</string>
+    <string name="shizuoka">静岡</string>
+    <string name="aichi">愛知</string>
+    <string name="mie">三重</string>
+    <string name="shiga">滋賀</string>
+    <string name="kyoto">京都</string>
+    <string name="osaka">大阪</string>
+    <string name="hyogo">兵庫</string>
+    <string name="nara">奈良</string>
+    <string name="wakayama">和歌山</string>
+    <string name="tottori">鳥取</string>
+    <string name="shimane">島根</string>
+    <string name="okayama">岡山</string>
+    <string name="hiroshima">広島</string>
+    <string name="yamaguchi">山口</string>
+    <string name="tokushima">徳島</string>
+    <string name="kagawa">香川</string>
+    <string name="ehime">愛媛</string>
+    <string name="kochi">高知</string>
+    <string name="fukuoka">福岡</string>
+    <string name="saga">佐賀</string>
+    <string name="nagasaki">長崎</string>
+    <string name="kumamoto">熊本</string>
+    <string name="oita">大分</string>
+    <string name="miyazaki">宮崎</string>
+    <string name="kagoshima">鹿児島</string>
+    <string name="okinawa">沖縄</string>
 
     <!-- メッセージ -->
     <string name="explanation_color">スライドして次の色を表示</string>
