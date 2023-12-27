@@ -144,6 +144,59 @@ class Utility {
         //region 定数・変数
         val CAMERA_PERMISSION_REQUEST = 1001
         val LOCATION_PERMISSION_REQUEST_CODE = 1002
+
+        /**
+         * 都道府県マップ
+         */
+        val cityMap = mapOf(
+            "Hokkaido" to R.string.hokkaido,
+            "Aomori" to R.string.aomori,
+            "Iwate" to R.string.iwate,
+            "Miyagi" to R.string.miyagi,
+            "Akita" to R.string.akita,
+            "Yamagata" to R.string.yamagata,
+            "Fukushima" to R.string.fukushima,
+            "Ibaraki" to R.string.ibaraki,
+            "Tochigi" to R.string.tochigi,
+            "Gunma" to R.string.gunma,
+            "Saitama" to R.string.saitama,
+            "Chiba" to R.string.chiba,
+            "Tokyo" to R.string.tokyo,
+            "Kanagawa" to R.string.kanagawa,
+            "Niigata" to R.string.niigata,
+            "Toyama" to R.string.toyama,
+            "Ishikawa" to R.string.ishikawa,
+            "Fukui" to R.string.fukui,
+            "Yamanashi" to R.string.yamanashi,
+            "Nagano" to R.string.nagano,
+            "Gifu" to R.string.gifu,
+            "Shizuoka" to R.string.shizuoka,
+            "Aichi" to R.string.aichi,
+            "Mie" to R.string.mie,
+            "Shiga" to R.string.shiga,
+            "Kyoto" to R.string.kyoto,
+            "Osaka" to R.string.osaka,
+            "Hyogo" to R.string.hyogo,
+            "Nara" to R.string.nara,
+            "Wakayama" to R.string.wakayama,
+            "Tottori" to R.string.tottori,
+            "Shimane" to R.string.shimane,
+            "Okayama" to R.string.okayama,
+            "Hiroshima" to R.string.hiroshima,
+            "Yamaguchi" to R.string.yamaguchi,
+            "Tokushima" to R.string.tokushima,
+            "Kagawa" to R.string.kagawa,
+            "Ehime" to R.string.ehime,
+            "Kochi" to R.string.kochi,
+            "Fukuoka" to R.string.fukuoka,
+            "Saga" to R.string.saga,
+            "Nagasaki" to R.string.nagasaki,
+            "Kumamoto" to R.string.kumamoto,
+            "Oita" to R.string.oita,
+            "Miyazaki" to R.string.miyazaki,
+            "Kagoshima" to R.string.kagoshima,
+            "Okinawa" to R.string.okinawa
+        )
         //endregion
 
         fun createBitmap(imageView: ImageView?, red: Int, green: Int, blue: Int): Bitmap {
@@ -337,7 +390,8 @@ class Utility {
                             val types = component.getJSONArray("types")
                             if (types.toString().contains("administrative_area_level_1")) {
                                 // 都道府県名を返却
-                                return convertToShiftJIS(component.getString("long_name"))
+                                val cityRomaji = convertToShiftJIS(component.getString("long_name"))
+                                return context.getString(cityMap[cityRomaji] ?: R.string.unknown)
                             }
                         }
                     }
@@ -372,4 +426,4 @@ data class LocationInfo(val latitude: Double, val longitude: Double)
 /**
  * 天気情報クラス
  */
-data class WeatherInfo(val city: String, val weather: String, val temperature: Int)
+data class WeatherInfo(val weather: String, val temperature: Int)
